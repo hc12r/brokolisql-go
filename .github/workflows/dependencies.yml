@@ -1,0 +1,31 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Run weekly on Mondays
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  update-deps:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+    - name: Update dependencies
+      run: |
+        go get -u ./...
+        go mod tidy
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        title: 'chore(deps): update dependencies'
+        commit-message: 'chore(deps): update dependencies'
+        branch: update-dependencies
+        delete-branch: true
+        body: |
+          This PR updates Go dependencies to their latest versions.
+          
+          This is an automated PR created by the dependency update workflow.
