@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"brokolisql-go/internal/processing"
+	"brokolisql-go/internal/transformers"
+	"brokolisql-go/pkg/errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,9 +11,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"brokolisql-go/pkg/loaders"
-	"brokolisql-go/pkg/services"
-	"brokolisql-go/pkg/transformers"
-	"brokolisql-go/pkg/utils"
 )
 
 var (
@@ -67,9 +67,9 @@ func init() {
 	flags.StringVarP(&transformFile, "r", "r", "", "JSON file with transformation rules (shorthand)")
 	flags.BoolVarP(&normalizeColumns, "n", "n", true, "Normalize column names for SQL compatibility (shorthand)")
 
-	utils.CheckError(rootCmd.MarkFlagRequired("input"))
-	utils.CheckError(rootCmd.MarkFlagRequired("output"))
-	utils.CheckError(rootCmd.MarkFlagRequired("table"))
+	errors.CheckError(rootCmd.MarkFlagRequired("input"))
+	errors.CheckError(rootCmd.MarkFlagRequired("output"))
+	errors.CheckError(rootCmd.MarkFlagRequired("table"))
 
 }
 
@@ -112,7 +112,7 @@ func runConversion() error {
 		}
 	}
 
-	sqlGenerator, err := services.NewSQLGenerator(services.SQLGeneratorOptions{
+	sqlGenerator, err := processing.NewSQLGenerator(processing.SQLGeneratorOptions{
 		Dialect:          dialect,
 		TableName:        tableName,
 		CreateTable:      createTable,

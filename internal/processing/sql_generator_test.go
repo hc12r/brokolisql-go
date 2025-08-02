@@ -1,4 +1,4 @@
-package services
+package processing
 
 import (
 	"brokolisql-go/pkg/loaders"

@@ -1,14 +1,14 @@
 package main
 
 import (
+	"brokolisql-go/internal/processing"
+	"brokolisql-go/internal/transformers"
 	"flag"
 	"os"
 	"path/filepath"
 
+	"brokolisql-go/pkg/common"
 	"brokolisql-go/pkg/loaders"
-	"brokolisql-go/pkg/services"
-	"brokolisql-go/pkg/transformers"
-	"brokolisql-go/pkg/utils"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 	flag.Parse()
 
 	// Set up logger
-	logger := utils.NewLogger(utils.LogLevelFromString(*logLevel))
+	logger := common.NewLogger(common.LogLevelFromString(*logLevel))
 	logger.Info("Starting BrokoliSQL")
 
 	// Validate required flags
@@ -88,7 +88,7 @@ func main() {
 
 	// Generate SQL
 	logger.Info("Generating SQL with dialect: %s", *dialect)
-	sqlGenerator, err := services.NewSQLGenerator(services.SQLGeneratorOptions{
+	sqlGenerator, err := processing.NewSQLGenerator(processing.SQLGeneratorOptions{
 		Dialect:          *dialect,
 		TableName:        *tableName,
 		CreateTable:      *createTable,

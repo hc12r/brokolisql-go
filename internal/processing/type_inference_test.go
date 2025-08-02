@@ -1,7 +1,7 @@
-package services
+package processing
 
 import (
-	"brokolisql-go/pkg/dialects"
+	"brokolisql-go/internal/dialects"
 	"brokolisql-go/pkg/loaders"
 	"reflect"
 	"testing"
