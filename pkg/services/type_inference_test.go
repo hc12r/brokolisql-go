@@ -302,7 +302,7 @@ func TestTypeInferenceEngine_CustomThreshold(t *testing.T) {
 
 	// Change threshold to 70%
 	engine.TypeThreshold = 0.7
-	
+
 	// With 70% threshold, this should be inferred as TEXT
 	if got := engine.inferType(values); got != dialects.SQLTypeText {
 		t.Errorf("TypeInferenceEngine.inferType() with 70%% threshold = %v, want %v", got, dialects.SQLTypeText)

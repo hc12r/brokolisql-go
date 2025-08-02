@@ -11,18 +11,18 @@ func TestGetLoader_Excel(t *testing.T) {
 		t.Errorf("GetLoader() error = %v", err)
 		return
 	}
-	
+
 	if _, ok := loader.(*ExcelLoader); !ok {
 		t.Errorf("GetLoader() returned wrong loader type for .xlsx file")
 	}
-	
+
 	// Test .xls extension
 	loader, err = GetLoader("test.xls")
 	if err != nil {
 		t.Errorf("GetLoader() error = %v", err)
 		return
 	}
-	
+
 	if _, ok := loader.(*ExcelLoader); !ok {
 		t.Errorf("GetLoader() returned wrong loader type for .xls file")
 	}

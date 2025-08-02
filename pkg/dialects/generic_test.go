@@ -35,7 +35,7 @@ func TestGenericDialect_QuoteIdentifier(t *testing.T) {
 			want:       "\"column-name\"",
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := d.QuoteIdentifier(tt.identifier); got != tt.want {
@@ -47,7 +47,7 @@ func TestGenericDialect_QuoteIdentifier(t *testing.T) {
 
 func TestGenericDialect_CreateTable(t *testing.T) {
 	d := &GenericDialect{}
-	
+
 	tests := []struct {
 		name      string
 		tableName string
@@ -87,18 +87,18 @@ func TestGenericDialect_CreateTable(t *testing.T) {
 			},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			sql := d.CreateTable(tt.tableName, tt.columns)
-			
+
 			// Check that the SQL contains all expected strings
 			for _, s := range tt.contains {
 				if !strings.Contains(sql, s) {
 					t.Errorf("GenericDialect.CreateTable() = %v, should contain %v", sql, s)
 				}
 			}
-			
+
 			// Check that the SQL ends with a semicolon and newline
 			if !strings.HasSuffix(sql, ";\n") {
 				t.Errorf("GenericDialect.CreateTable() = %v, should end with semicolon and newline", sql)
@@ -109,7 +109,7 @@ func TestGenericDialect_CreateTable(t *testing.T) {
 
 func TestGenericDialect_InsertInto(t *testing.T) {
 	d := &GenericDialect{}
-	
+
 	tests := []struct {
 		name      string
 		tableName string
@@ -169,23 +169,23 @@ func TestGenericDialect_InsertInto(t *testing.T) {
 			},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			sql := d.InsertInto(tt.tableName, tt.columns, tt.values, tt.batchSize)
-			
+
 			// Check that the SQL contains all expected strings
 			for _, s := range tt.contains {
 				if !strings.Contains(sql, s) {
 					t.Errorf("GenericDialect.InsertInto() = %v, should contain %v", sql, s)
 				}
 			}
-			
+
 			// Check that the SQL ends with a semicolon and newlines
 			if !strings.HasSuffix(sql, ";\n\n") {
 				t.Errorf("GenericDialect.InsertInto() = %v, should end with semicolon and newlines", sql)
 			}
-			
+
 			// Check batch size behavior
 			if tt.batchSize > 0 {
 				// Count the number of INSERT statements

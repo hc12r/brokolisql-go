@@ -70,13 +70,13 @@ func (n *Normalizer) NormalizeColumnName(name string) string {
 
 func (n *Normalizer) NormalizeColumnNames(names []string) []string {
 	normalized := make([]string, len(names))
-	
+
 	// Track used names and their counts
 	usedNames := make(map[string]int)
-	
+
 	for i, name := range names {
 		normalizedName := n.NormalizeColumnName(name)
-		
+
 		// Handle duplicate names by adding a suffix
 		if count, exists := usedNames[normalizedName]; exists {
 			// For duplicates, add _0, _1, etc.
@@ -86,9 +86,9 @@ func (n *Normalizer) NormalizeColumnNames(names []string) []string {
 		} else {
 			usedNames[normalizedName] = 1
 		}
-		
+
 		normalized[i] = normalizedName
 	}
-	
+
 	return normalized
 }

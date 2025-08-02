@@ -76,18 +76,18 @@ func TestGetDialect(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			dialect, err := GetDialect(tt.dialect)
-			
+
 			// Check error
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetDialect() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			
+
 			// If we expect an error, no need to check the dialect type
 			if tt.wantErr {
 				return
 			}
-			
+
 			// Check dialect type
 			switch tt.wantType.(type) {
 			case *PostgresDialect:
@@ -117,7 +117,7 @@ func TestGetDialect(t *testing.T) {
 			default:
 				t.Errorf("Unknown expected type for %s", tt.dialect)
 			}
-			
+
 			// Check dialect name
 			if dialect.Name() == "" {
 				t.Errorf("Dialect name should not be empty")
@@ -128,7 +128,7 @@ func TestGetDialect(t *testing.T) {
 
 func TestBaseDialect_FormatValue(t *testing.T) {
 	d := &BaseDialect{}
-	
+
 	tests := []struct {
 		name  string
 		value interface{}
@@ -175,7 +175,7 @@ func TestBaseDialect_FormatValue(t *testing.T) {
 			want:  "'{test}'",
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := d.FormatValue(tt.value)
@@ -193,40 +193,40 @@ func TestColumnDef(t *testing.T) {
 		Type:     SQLTypeInteger,
 		Nullable: false,
 	}
-	
+
 	if col.Name != "id" {
 		t.Errorf("Expected column name 'id', got %s", col.Name)
 	}
-	
+
 	if col.Type != SQLTypeInteger {
 		t.Errorf("Expected column type INTEGER, got %s", col.Type)
 	}
-	
+
 	if col.Nullable {
 		t.Errorf("Expected column to be NOT NULL")
 	}
-	
+
 	// Test SQLType constants
 	if SQLTypeInteger != "INTEGER" {
 		t.Errorf("Expected SQLTypeInteger to be 'INTEGER', got %s", SQLTypeInteger)
 	}
-	
+
 	if SQLTypeFloat != "FLOAT" {
 		t.Errorf("Expected SQLTypeFloat to be 'FLOAT', got %s", SQLTypeFloat)
 	}
-	
+
 	if SQLTypeText != "TEXT" {
 		t.Errorf("Expected SQLTypeText to be 'TEXT', got %s", SQLTypeText)
 	}
-	
+
 	if SQLTypeDate != "DATE" {
 		t.Errorf("Expected SQLTypeDate to be 'DATE', got %s", SQLTypeDate)
 	}
-	
+
 	if SQLTypeDateTime != "DATETIME" {
 		t.Errorf("Expected SQLTypeDateTime to be 'DATETIME', got %s", SQLTypeDateTime)
 	}
-	
+
 	if SQLTypeBoolean != "BOOLEAN" {
 		t.Errorf("Expected SQLTypeBoolean to be 'BOOLEAN', got %s", SQLTypeBoolean)
 	}

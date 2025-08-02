@@ -104,7 +104,7 @@ func TestGetLoader_CSV(t *testing.T) {
 		t.Errorf("GetLoader() error = %v", err)
 		return
 	}
-	
+
 	if _, ok := loader.(*CSVLoader); !ok {
 		t.Errorf("GetLoader() returned wrong loader type for CSV file")
 	}

@@ -72,7 +72,7 @@ func TestJSONLoader_Load(t *testing.T) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
-				
+
 				// Check that all expected columns exist
 				columnMap := make(map[string]bool)
 				for _, col := range ds.Columns {
@@ -83,7 +83,7 @@ func TestJSONLoader_Load(t *testing.T) {
 						t.Errorf("Expected column %s not found", col)
 					}
 				}
-				
+
 				// Check first row values
 				if ds.Rows[0]["name"] != "John Doe" {
 					t.Errorf("Expected name 'John Doe', got %v", ds.Rows[0]["name"])
@@ -117,7 +117,7 @@ func TestJSONLoader_Load(t *testing.T) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
-				
+
 				// Check that address is serialized as a string
 				addressStr, ok := ds.Rows[0]["address"].(string)
 				if !ok {
@@ -166,7 +166,7 @@ func TestGetLoader_JSON(t *testing.T) {
 		t.Errorf("GetLoader() error = %v", err)
 		return
 	}
-	
+
 	if _, ok := loader.(*JSONLoader); !ok {
 		t.Errorf("GetLoader() returned wrong loader type for JSON file")
 	}

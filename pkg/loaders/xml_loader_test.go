@@ -108,7 +108,7 @@ func TestXMLLoader_Load(t *testing.T) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
-				
+
 				// Check that all expected columns exist
 				expectedColumns := map[string]bool{
 					"id":   true,
@@ -116,18 +116,18 @@ func TestXMLLoader_Load(t *testing.T) {
 					"age":  true,
 					"city": true,
 				}
-				
+
 				for _, col := range ds.Columns {
 					if _, ok := expectedColumns[col]; !ok {
 						t.Errorf("Unexpected column: %s", col)
 					}
 					delete(expectedColumns, col)
 				}
-				
+
 				for col := range expectedColumns {
 					t.Errorf("Expected column not found: %s", col)
 				}
-				
+
 				// Check first row values
 				if ds.Rows[0]["name"] != "John Doe" {
 					t.Errorf("Expected name 'John Doe', got %v", ds.Rows[0]["name"])
@@ -145,7 +145,7 @@ func TestXMLLoader_Load(t *testing.T) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
-				
+
 				// Check first row values from attributes
 				if ds.Rows[0]["id"] != "1" {
 					t.Errorf("Expected id '1', got %v", ds.Rows[0]["id"])
@@ -163,12 +163,12 @@ func TestXMLLoader_Load(t *testing.T) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
-				
+
 				// Check for both element and attribute data
 				if ds.Rows[0]["name"] != "John Doe" {
 					t.Errorf("Expected name 'John Doe', got %v", ds.Rows[0]["name"])
 				}
-				
+
 				// Note: The current implementation doesn't handle nested elements with attributes
 				// This test is checking the current behavior, which might need improvement
 			},
@@ -182,7 +182,7 @@ func TestXMLLoader_Load(t *testing.T) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
-				
+
 				// Check for expected columns
 				hasName := false
 				hasPosition := false
@@ -194,7 +194,7 @@ func TestXMLLoader_Load(t *testing.T) {
 						hasPosition = true
 					}
 				}
-				
+
 				if !hasName {
 					t.Errorf("Expected 'name' column not found")
 				}
@@ -236,7 +236,7 @@ func TestGetLoader_XML(t *testing.T) {
 		t.Errorf("GetLoader() error = %v", err)
 		return
 	}
-	
+
 	if _, ok := loader.(*XMLLoader); !ok {
 		t.Errorf("GetLoader() returned wrong loader type for XML file")
 	}

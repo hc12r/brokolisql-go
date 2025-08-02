@@ -52,18 +52,18 @@ func TestGetLoader(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			loader, err := GetLoader(tt.filePath)
-			
+
 			// Check error
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetLoader() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			
+
 			// If we expect an error, no need to check the loader type
 			if tt.wantErr {
 				return
 			}
-			
+
 			// Check loader type
 			switch tt.wantType.(type) {
 			case *CSVLoader:
@@ -98,47 +98,47 @@ func TestDataSet(t *testing.T) {
 			{"name": "Jane Smith", "age": "25", "city": "London"},
 		},
 	}
-	
+
 	// Test DataSet structure
 	if len(ds.Columns) != 3 {
 		t.Errorf("Expected 3 columns, got %d", len(ds.Columns))
 	}
-	
+
 	if len(ds.Rows) != 2 {
 		t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 	}
-	
+
 	// Test accessing data
 	if ds.Rows[0]["name"] != "John Doe" {
 		t.Errorf("Expected name 'John Doe', got %v", ds.Rows[0]["name"])
 	}
-	
+
 	if ds.Rows[1]["city"] != "London" {
 		t.Errorf("Expected city 'London', got %v", ds.Rows[1]["city"])
 	}
-	
+
 	// Test modifying data
 	ds.Rows[0]["age"] = "31"
 	if ds.Rows[0]["age"] != "31" {
 		t.Errorf("Expected age '31' after modification, got %v", ds.Rows[0]["age"])
 	}
-	
+
 	// Test adding a new row
 	ds.Rows = append(ds.Rows, DataRow{"name": "Bob Johnson", "age": "40", "city": "Chicago"})
 	if len(ds.Rows) != 3 {
 		t.Errorf("Expected 3 rows after adding a row, got %d", len(ds.Rows))
 	}
-	
+
 	// Test adding a new column
 	ds.Columns = append(ds.Columns, "country")
 	ds.Rows[0]["country"] = "USA"
 	ds.Rows[1]["country"] = "UK"
 	ds.Rows[2]["country"] = "USA"
-	
+
 	if len(ds.Columns) != 4 {
 		t.Errorf("Expected 4 columns after adding a column, got %d", len(ds.Columns))
 	}
-	
+
 	if ds.Rows[1]["country"] != "UK" {
 		t.Errorf("Expected country 'UK', got %v", ds.Rows[1]["country"])
 	}

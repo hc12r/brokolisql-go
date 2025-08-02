@@ -14,18 +14,18 @@ func createTestTransformConfig(t *testing.T, config string) string {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	
+
 	// Create a test config file
 	configPath := filepath.Join(tempDir, "transforms.json")
 	if err := os.WriteFile(configPath, []byte(config), 0644); err != nil {
 		t.Fatalf("Failed to write test config file: %v", err)
 	}
-	
+
 	// Register cleanup function
 	t.Cleanup(func() {
 		os.RemoveAll(tempDir)
 	})
-	
+
 	return configPath
 }
 
@@ -74,9 +74,9 @@ func TestNewTransformEngine(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	validConfigPath := createTestTransformConfig(t, validConfig)
-	
+
 	// Invalid JSON
 	invalidConfig := `{
 		"transformations": [
@@ -89,12 +89,12 @@ func TestNewTransformEngine(t *testing.T) {
 			}
 		]
 	`
-	
+
 	invalidConfigPath := createTestTransformConfig(t, invalidConfig)
-	
+
 	// Non-existent file
 	nonExistentPath := filepath.Join(os.TempDir(), "non_existent_file.json")
-	
+
 	tests := []struct {
 		name       string
 		configPath string
@@ -116,16 +116,16 @@ func TestNewTransformEngine(t *testing.T) {
 			wantErr:    true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			engine, err := NewTransformEngine(tt.configPath)
-			
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewTransformEngine() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			
+
 			if err == nil && engine == nil {
 				t.Errorf("NewTransformEngine() returned nil engine")
 			}
@@ -145,33 +145,33 @@ func TestTransformEngine_RenameColumns(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check that columns were renamed
 	expectedColumns := []string{"id", "given_name", "surname", "email", "country", "city"}
 	if !reflect.DeepEqual(dataset.Columns, expectedColumns) {
 		t.Errorf("RenameColumns() columns = %v, want %v", dataset.Columns, expectedColumns)
 	}
-	
+
 	// Check that data was updated
 	if val, ok := dataset.Rows[0]["given_name"]; !ok || val != "John" {
 		t.Errorf("RenameColumns() data not updated correctly")
 	}
-	
+
 	// Check that old columns were removed
 	if _, ok := dataset.Rows[0]["first_name"]; ok {
 		t.Errorf("RenameColumns() old column not removed")
@@ -188,28 +188,28 @@ func TestTransformEngine_AddColumn(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check that column was added
 	expectedColumns := []string{"id", "first_name", "last_name", "email", "country", "city", "full_name"}
 	if !reflect.DeepEqual(dataset.Columns, expectedColumns) {
 		t.Errorf("AddColumn() columns = %v, want %v", dataset.Columns, expectedColumns)
 	}
-	
+
 	// Check that data was added
 	if val, ok := dataset.Rows[0]["full_name"]; !ok || val != "John Doe" {
 		t.Errorf("AddColumn() data not added correctly, got %v", val)
@@ -225,27 +225,27 @@ func TestTransformEngine_FilterRows(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check that rows were filtered
 	if len(dataset.Rows) != 2 {
 		t.Errorf("FilterRows() rows = %d, want %d", len(dataset.Rows), 2)
 	}
-	
+
 	// Check that only USA and UK rows remain
 	for _, row := range dataset.Rows {
 		country := row["country"]
@@ -265,22 +265,22 @@ func TestTransformEngine_ApplyFunction(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check that function was applied
 	if val, ok := dataset.Rows[0]["email"]; !ok || val != "john.doe@example.com" {
 		t.Errorf("ApplyFunction() function not applied correctly, got %v", val)
@@ -300,31 +300,31 @@ func TestTransformEngine_ReplaceValues(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check that values were replaced
 	if val, ok := dataset.Rows[0]["country"]; !ok || val != "United States" {
 		t.Errorf("ReplaceValues() value not replaced correctly, got %v", val)
 	}
-	
+
 	if val, ok := dataset.Rows[1]["country"]; !ok || val != "United Kingdom" {
 		t.Errorf("ReplaceValues() value not replaced correctly, got %v", val)
 	}
-	
+
 	// Check that non-mapped values were not changed
 	if val, ok := dataset.Rows[2]["country"]; !ok || val != "Canada" {
 		t.Errorf("ReplaceValues() non-mapped value changed, got %v", val)
@@ -340,28 +340,28 @@ func TestTransformEngine_DropColumns(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check that columns were dropped
 	expectedColumns := []string{"id", "first_name", "last_name", "country"}
 	if !reflect.DeepEqual(dataset.Columns, expectedColumns) {
 		t.Errorf("DropColumns() columns = %v, want %v", dataset.Columns, expectedColumns)
 	}
-	
+
 	// Check that data was removed
 	for _, row := range dataset.Rows {
 		if _, ok := row["email"]; ok {
@@ -383,27 +383,27 @@ func TestTransformEngine_SortRows(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check that rows were sorted
 	expectedOrder := []string{"Canada", "UK", "USA"}
 	for i, country := range expectedOrder {
 		if dataset.Rows[i]["country"] != country {
-			t.Errorf("SortRows() incorrect order, got %v at position %d, want %v", 
+			t.Errorf("SortRows() incorrect order, got %v at position %d, want %v",
 				dataset.Rows[i]["country"], i, country)
 		}
 	}
@@ -448,49 +448,49 @@ func TestTransformEngine_MultipleTransformations(t *testing.T) {
 			}
 		]
 	}`
-	
+
 	configPath := createTestTransformConfig(t, config)
-	
+
 	engine, err := NewTransformEngine(configPath)
 	if err != nil {
 		t.Fatalf("Failed to create transform engine: %v", err)
 	}
-	
+
 	dataset := createTestDataset()
-	
+
 	err = engine.ApplyTransformations(dataset)
 	if err != nil {
 		t.Errorf("ApplyTransformations() error = %v", err)
 		return
 	}
-	
+
 	// Check final state after all transformations
-	
+
 	// Check number of rows (after filtering)
 	if len(dataset.Rows) != 2 {
 		t.Errorf("Multiple transformations: rows = %d, want %d", len(dataset.Rows), 2)
 	}
-	
+
 	// Check columns (after renaming and adding)
 	expectedColumns := []string{"id", "given_name", "surname", "email", "country", "city", "full_name"}
 	if !reflect.DeepEqual(dataset.Columns, expectedColumns) {
 		t.Errorf("Multiple transformations: columns = %v, want %v", dataset.Columns, expectedColumns)
 	}
-	
+
 	// Check sorting (UK/United Kingdom should be first)
 	if dataset.Rows[0]["country"] != "United Kingdom" {
-		t.Errorf("Multiple transformations: first row country = %v, want %v", 
+		t.Errorf("Multiple transformations: first row country = %v, want %v",
 			dataset.Rows[0]["country"], "United Kingdom")
 	}
-	
+
 	// Check function application (email should be lowercase)
 	if dataset.Rows[0]["email"] != "john.doe@example.com" && dataset.Rows[0]["given_name"] == "John" {
 		t.Errorf("Multiple transformations: email not lowercased, got %v", dataset.Rows[0]["email"])
 	}
-	
+
 	// Check added column
 	if dataset.Rows[0]["full_name"] != "John Doe" && dataset.Rows[0]["given_name"] == "John" {
-		t.Errorf("Multiple transformations: full_name not added correctly, got %v", 
+		t.Errorf("Multiple transformations: full_name not added correctly, got %v",
 			dataset.Rows[0]["full_name"])
 	}
 }
@@ -656,18 +656,18 @@ func TestTransformEngine_ErrorHandling(t *testing.T) {
 			wantErr: true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			configPath := createTestTransformConfig(t, tt.config)
-			
+
 			engine, err := NewTransformEngine(configPath)
 			if err != nil {
 				t.Fatalf("Failed to create transform engine: %v", err)
 			}
-			
+
 			dataset := createTestDataset()
-			
+
 			err = engine.ApplyTransformations(dataset)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ApplyTransformations() error = %v, wantErr %v", err, tt.wantErr)

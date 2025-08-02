@@ -14,7 +14,7 @@ func TestAppError_Error(t *testing.T) {
 		Message: "test message",
 		Cause:   cause,
 	}
-	
+
 	errStr := err.Error()
 	if !strings.Contains(errStr, string(ErrorTypeInput)) {
 		t.Errorf("Error() should contain error type, got: %s", errStr)
@@ -25,14 +25,14 @@ func TestAppError_Error(t *testing.T) {
 	if !strings.Contains(errStr, "underlying error") {
 		t.Errorf("Error() should contain cause, got: %s", errStr)
 	}
-	
+
 	// Test without cause
 	err = &AppError{
 		Type:    ErrorTypeInput,
 		Message: "test message",
 		Cause:   nil,
 	}
-	
+
 	errStr = err.Error()
 	if !strings.Contains(errStr, string(ErrorTypeInput)) {
 		t.Errorf("Error() should contain error type, got: %s", errStr)
@@ -52,19 +52,19 @@ func TestAppError_Unwrap(t *testing.T) {
 		Message: "test message",
 		Cause:   cause,
 	}
-	
+
 	unwrapped := err.Unwrap()
 	if unwrapped != cause {
 		t.Errorf("Unwrap() = %v, want %v", unwrapped, cause)
 	}
-	
+
 	// Test with nil cause
 	err = &AppError{
 		Type:    ErrorTypeInput,
 		Message: "test message",
 		Cause:   nil,
 	}
-	
+
 	unwrapped = err.Unwrap()
 	if unwrapped != nil {
 		t.Errorf("Unwrap() = %v, want nil", unwrapped)
@@ -74,7 +74,7 @@ func TestAppError_Unwrap(t *testing.T) {
 func TestNewInputError(t *testing.T) {
 	cause := errors.New("underlying error")
 	err := NewInputError("test message", cause)
-	
+
 	if err.Type != ErrorTypeInput {
 		t.Errorf("NewInputError() Type = %v, want %v", err.Type, ErrorTypeInput)
 	}
@@ -89,7 +89,7 @@ func TestNewInputError(t *testing.T) {
 func TestNewFormatError(t *testing.T) {
 	cause := errors.New("underlying error")
 	err := NewFormatError("test message", cause)
-	
+
 	if err.Type != ErrorTypeFormat {
 		t.Errorf("NewFormatError() Type = %v, want %v", err.Type, ErrorTypeFormat)
 	}
@@ -104,7 +104,7 @@ func TestNewFormatError(t *testing.T) {
 func TestNewTransformError(t *testing.T) {
 	cause := errors.New("underlying error")
 	err := NewTransformError("test message", cause)
-	
+
 	if err.Type != ErrorTypeTransform {
 		t.Errorf("NewTransformError() Type = %v, want %v", err.Type, ErrorTypeTransform)
 	}
@@ -119,7 +119,7 @@ func TestNewTransformError(t *testing.T) {
 func TestNewSQLError(t *testing.T) {
 	cause := errors.New("underlying error")
 	err := NewSQLError("test message", cause)
-	
+
 	if err.Type != ErrorTypeSQL {
 		t.Errorf("NewSQLError() Type = %v, want %v", err.Type, ErrorTypeSQL)
 	}
@@ -134,7 +134,7 @@ func TestNewSQLError(t *testing.T) {
 func TestNewOutputError(t *testing.T) {
 	cause := errors.New("underlying error")
 	err := NewOutputError("test message", cause)
-	
+
 	if err.Type != ErrorTypeOutput {
 		t.Errorf("NewOutputError() Type = %v, want %v", err.Type, ErrorTypeOutput)
 	}
@@ -149,7 +149,7 @@ func TestNewOutputError(t *testing.T) {
 func TestNewInternalError(t *testing.T) {
 	cause := errors.New("underlying error")
 	err := NewInternalError("test message", cause)
-	
+
 	if err.Type != ErrorTypeInternal {
 		t.Errorf("NewInternalError() Type = %v, want %v", err.Type, ErrorTypeInternal)
 	}
