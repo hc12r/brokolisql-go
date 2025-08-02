@@ -184,48 +184,65 @@ For a comprehensive overview of the entire implementation, see [IMPLEMENTATION_S
 
 ```
 brokolisql-go/
-├── .github/
-│   └── workflows/
-│       ├── tests.yml
-│       ├── code-quality.yml
-│       ├── cross-platform.yml
-│       ├── release.yml
-│       ├── dependencies.yml
-│       └── security.yml
-├── cmd/
-│   └── root.go
-├── examples/
-│   ├── customers.csv
-│   ├── output.sql
-│   └── transforms.json
-├── pkg/
-│   ├── dialects/
-│   │   ├── dialect.go
-│   │   ├── generic.go
-│   │   ├── mysql.go
-│   │   ├── oracle.go
-│   │   ├── postgres.go
-│   │   ├── sqlite.go
-│   │   └── sqlserver.go
-│   ├── loaders/
-│   │   ├── csv_loader.go
-│   │   ├── excel_loader.go
-│   │   ├── json_loader.go
-│   │   ├── loader.go
-│   │   └── xml_loader.go
-│   ├── services/
-│   │   ├── normalizer.go
-│   │   ├── sql_generator.go
-│   │   └── type_inference.go
-│   ├── transformers/
-│   │   └── transform_engine.go
-│   └── utils/
-│       ├── errors.go
-│       └── logger.go
-├── .goreleaser.yml
+├── brokolisql-go.iml
+├── cmd
+│   └── root.go
+├── docs
+│   ├── GITHUB_ACTIONS.md
+│   ├── GITHUB_ACTIONS_SUMMARY.md
+│   └── IMPLEMENTATION_SUMMARY.md
+├── examples
+│   ├── customers.csv
+│   ├── output-100.sql
+│   ├── output.sql
+│   ├── output_transformed.sql
+│   └── transforms.json
+├── internal
+│   ├── dialects
+│   │   ├── dialect.go
+│   │   ├── dialect_test.go
+│   │   ├── generic.go
+│   │   ├── generic_test.go
+│   │   ├── mysql.go
+│   │   ├── oracle.go
+│   │   ├── postgres.go
+│   │   ├── sqlite.go
+│   │   └── sqlserver.go
+│   ├── processing
+│   │   ├── normalizer.go
+│   │   ├── normalizer_test.go
+│   │   ├── sql_generator.go
+│   │   ├── sql_generator_test.go
+│   │   ├── type_inference.go
+│   │   └── type_inference_test.go
+│   └── transformers
+│       ├── transform_engine.go
+│       └── transform_engine_test.go
+├── pkg
+│   ├── common
+│   │   ├── logger.go
+│   │   └── logger_test.go
+│   ├── errors
+│   │   ├── errors.go
+│   │   ├── errors_test.go
+│   │   ├── handler.go
+│   │   └── handler_test.go
+│   └── loaders
+│       ├── csv_loader.go
+│       ├── csv_loader_test.go
+│       ├── excel_loader.go
+│       ├── excel_loader_test.go
+│       ├── json_loader.go
+│       ├── json_loader_test.go
+│       ├── loader.go
+│       ├── loader_test.go
+│       ├── xml_loader.go
+│       └── xml_loader_test.go
 ├── go.mod
 ├── go.sum
-└── main.go
+├── main.go
+├── LICENSE
+└── README.md
 ```
 
 ## Contributing
