@@ -30,7 +30,7 @@ func (l *ExcelLoader) Load(filePath string) (*DataSet, error) {
 	}
 
 	if len(rows) < 2 {
-		return nil, fmt.Errorf("Excel file must contain at least a header row and one data row")
+		return nil, fmt.Errorf("excel file must contain at least a header row and one data row")
 	}
 
 	headers := rows[0]
