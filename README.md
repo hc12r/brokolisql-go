@@ -251,4 +251,4 @@ BrokoliSQL-Go is licensed under the GNU GPL-3.0 License. See the [LICENSE](LICEN
 
 ## Acknowledgments
 
-BrokoliSQL-Go is a Go implementation of the original [BrokoliSQL](https://github.com/yourusername/brokolisql) Python project, reimagined with Go's performance and concurrency benefits.
+BrokoliSQL-Go is a Go implementation of the original [BrokoliSQL](https://github.com/hc12r/brokolisql) Python project, reimagined with Go's performance and concurrency benefits.
