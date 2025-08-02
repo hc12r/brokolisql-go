@@ -128,10 +128,10 @@ func (e *TransformEngine) addColumn(transform Transformation, dataset *loaders.D
 					result += fmt.Sprintf("%v", val)
 				} else {
 					// Check if this is a string literal (enclosed in quotes)
-					if (strings.HasPrefix(part, "'") && strings.HasSuffix(part, "'")) || 
-					   (strings.HasPrefix(part, "\"") && strings.HasSuffix(part, "\"")) {
+					if (strings.HasPrefix(part, "'") && strings.HasSuffix(part, "'")) ||
+						(strings.HasPrefix(part, "\"") && strings.HasSuffix(part, "\"")) {
 						// Remove the quotes and add the literal string
-						result += part[1:len(part)-1]
+						result += part[1 : len(part)-1]
 					} else {
 						result += part
 					}
