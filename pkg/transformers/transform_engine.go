@@ -127,7 +127,14 @@ func (e *TransformEngine) addColumn(transform Transformation, dataset *loaders.D
 				if val, ok := row[part]; ok {
 					result += fmt.Sprintf("%v", val)
 				} else {
-					result += part
+					// Check if this is a string literal (enclosed in quotes)
+					if (strings.HasPrefix(part, "'") && strings.HasSuffix(part, "'")) || 
+					   (strings.HasPrefix(part, "\"") && strings.HasSuffix(part, "\"")) {
+						// Remove the quotes and add the literal string
+						result += part[1:len(part)-1]
+					} else {
+						result += part
+					}
 				}
 			}
 			row[transform.Name] = result
@@ -145,15 +152,32 @@ func (e *TransformEngine) filterRows(transform Transformation, dataset *loaders.
 		return fmt.Errorf("filter_rows transformation requires a condition")
 	}
 
+	// Validate the condition format
+	if strings.Contains(transform.Condition, " in ") {
+		parts := strings.Split(transform.Condition, " in ")
+		if len(parts) != 2 {
+			return fmt.Errorf("invalid 'in' condition: %s", transform.Condition)
+		}
+
+		// Check if the values part is properly formatted
+		valuesStr := strings.TrimSpace(parts[1])
+		if !strings.HasPrefix(valuesStr, "[") || !strings.HasSuffix(valuesStr, "]") {
+			return fmt.Errorf("invalid 'in' condition format: values must be enclosed in []")
+		}
+
+		// Check if the column name is not empty
+		colName := strings.TrimSpace(parts[0])
+		if colName == "" {
+			return fmt.Errorf("invalid 'in' condition: column name cannot be empty")
+		}
+	}
+
 	var filteredRows []loaders.DataRow
 	for _, row := range dataset.Rows {
 
 		if strings.Contains(transform.Condition, " in ") {
 			parts := strings.Split(transform.Condition, " in ")
-			if len(parts) != 2 {
-				return fmt.Errorf("invalid 'in' condition: %s", transform.Condition)
-			}
-
+			// We already validated the format above, so we can safely proceed
 			colName := strings.TrimSpace(parts[0])
 			valuesStr := strings.TrimSpace(parts[1])
 			valuesStr = strings.Trim(valuesStr, "[]")
@@ -169,7 +193,7 @@ func (e *TransformEngine) filterRows(transform Transformation, dataset *loaders.
 				}
 			}
 		} else {
-
+			// For other conditions, keep all rows for now
 			filteredRows = append(filteredRows, row)
 		}
 	}
