@@ -18,13 +18,13 @@ BrokoliSQL-Go is a powerful command-line tool written in Go that converts struct
 
 ### Prerequisites
 
-- Go 1.18 or higher
+- Go 1.24 or higher
 
 ### From Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/brokolisql-go.git
+git clone https://github.com/hc12r/brokolisql-go.git
 cd brokolisql-go
 
 # Build the binary
@@ -161,10 +161,37 @@ Data analysts can use BrokoliSQL-Go to quickly convert data from various formats
 
 When integrating with APIs that provide data in JSON or XML format, BrokoliSQL-Go can transform this data into SQL for storage in a relational database.
 
+## Continuous Integration and GitHub Actions
+
+![Tests](https://github.com/hc12r/brokolisql-go/actions/workflows/tests.yml/badge.svg)
+![Code Quality](https://github.com/hc12r/brokolisql-go/actions/workflows/code-quality.yml/badge.svg)
+![Security Scan](https://github.com/hc12r/brokolisql-go/actions/workflows/security.yml/badge.svg)
+
+BrokoliSQL-Go uses GitHub Actions for continuous integration, testing, and deployment. The following workflows are available:
+
+- **Tests**: Runs the test suite and generates code coverage reports
+- **Code Quality**: Checks code quality using linters and formatters
+- **Cross-Platform Tests**: Ensures the code works across different operating systems and Go versions
+- **Release Automation**: Automates the release process when a new version is tagged
+- **Dependency Updates**: Keeps dependencies up-to-date with weekly checks
+- **Security Scan**: Scans the code for security vulnerabilities
+
+For more details on how to use and customize these workflows, see [GITHUB_ACTIONS.md](docs/GITHUB_ACTIONS.md).  
+For a summary of the GitHub Actions implementation, benefits, and next steps, see [GITHUB_ACTIONS_SUMMARY.md](docs/GITHUB_ACTIONS_SUMMARY.md).  
+For a comprehensive overview of the entire implementation, see [IMPLEMENTATION_SUMMARY.md](docs/IMPLEMENTATION_SUMMARY.md).
+
 ## Project Structure
 
 ```
 brokolisql-go/
+├── .github/
+│   └── workflows/
+│       ├── tests.yml
+│       ├── code-quality.yml
+│       ├── cross-platform.yml
+│       ├── release.yml
+│       ├── dependencies.yml
+│       └── security.yml
 ├── cmd/
 │   └── root.go
 ├── examples/
@@ -195,6 +222,7 @@ brokolisql-go/
 │   └── utils/
 │       ├── errors.go
 │       └── logger.go
+├── .goreleaser.yml
 ├── go.mod
 ├── go.sum
 └── main.go
