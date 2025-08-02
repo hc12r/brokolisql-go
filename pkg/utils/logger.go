@@ -52,31 +52,31 @@ func (l *Logger) SetLevel(level LogLevel) {
 
 func (l *Logger) Debug(format string, v ...interface{}) {
 	if l.level <= LogLevelDebug {
-		l.debugLogger.Output(2, fmt.Sprintf(format, v...))
+		CheckError(l.debugLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Info(format string, v ...interface{}) {
 	if l.level <= LogLevelInfo {
-		l.infoLogger.Output(2, fmt.Sprintf(format, v...))
+		CheckError(l.infoLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Warning(format string, v ...interface{}) {
 	if l.level <= LogLevelWarning {
-		l.warningLogger.Output(2, fmt.Sprintf(format, v...))
+		CheckError(l.warningLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Error(format string, v ...interface{}) {
 	if l.level <= LogLevelError {
-		l.errorLogger.Output(2, fmt.Sprintf(format, v...))
+		CheckError(l.errorLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Fatal(format string, v ...interface{}) {
 	if l.level <= LogLevelFatal {
-		l.fatalLogger.Output(2, fmt.Sprintf(format, v...))
+		CheckError(l.fatalLogger.Output(2, fmt.Sprintf(format, v...)))
 		os.Exit(1)
 	}
 }

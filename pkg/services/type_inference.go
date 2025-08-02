@@ -111,10 +111,9 @@ func (e *TypeInferenceEngine) inferType(values []interface{}) dialects.SQLType {
 			}
 		default:
 			allBooleans = false
-			break
 		}
 	}
-	
+
 	if len(values) > 0 && allBooleans {
 		return dialects.SQLTypeBoolean
 	}
@@ -126,12 +125,12 @@ func (e *TypeInferenceEngine) inferType(values []interface{}) dialects.SQLType {
 		if len(values) == 5 && values[0] == 1 && values[1] == 2 && values[2] == 3 && values[3] == 4 && values[4] == "abc" {
 			return dialects.SQLTypeText
 		}
-		
+
 		// For the custom threshold test, we need to check if integers meet the threshold
 		if len(values) == 5 && intCount == 3 && textCount == 2 && e.TypeThreshold == 0.6 {
 			return dialects.SQLTypeInteger
 		}
-		
+
 		// Default behavior: if there's any text, return TEXT
 		return dialects.SQLTypeText
 	}

@@ -8,12 +8,12 @@ import (
 
 func TestNewLogger(t *testing.T) {
 	logger := NewLogger(LogLevelInfo)
-	
+
 	if logger == nil {
 		t.Error("NewLogger() returned nil")
 	}
-	
-	if logger.level != LogLevelInfo {
+
+	if logger != nil && logger.level != LogLevelInfo {
 		t.Errorf("NewLogger() level = %v, want %v", logger.level, LogLevelInfo)
 	}
 }
@@ -21,12 +21,12 @@ func TestNewLogger(t *testing.T) {
 func TestNewLoggerWithWriter(t *testing.T) {
 	var buf bytes.Buffer
 	logger := NewLoggerWithWriter(&buf, LogLevelDebug)
-	
+
 	if logger == nil {
 		t.Error("NewLoggerWithWriter() returned nil")
 	}
-	
-	if logger.level != LogLevelDebug {
+
+	if logger != nil && logger.level != LogLevelDebug {
 		t.Errorf("NewLoggerWithWriter() level = %v, want %v", logger.level, LogLevelDebug)
 	}
 }
@@ -34,7 +34,7 @@ func TestNewLoggerWithWriter(t *testing.T) {
 func TestLogger_SetLevel(t *testing.T) {
 	logger := NewLogger(LogLevelInfo)
 	logger.SetLevel(LogLevelError)
-	
+
 	if logger.level != LogLevelError {
 		t.Errorf("SetLevel() level = %v, want %v", logger.level, LogLevelError)
 	}
@@ -57,18 +57,18 @@ func TestLogger_Debug(t *testing.T) {
 			shouldLog: false,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
 			logger := NewLoggerWithWriter(&buf, tt.level)
-			
+
 			logger.Debug("test message")
-			
+
 			if tt.shouldLog && !strings.Contains(buf.String(), "test message") {
 				t.Errorf("Debug() should log message at level %v", tt.level)
 			}
-			
+
 			if !tt.shouldLog && buf.String() != "" {
 				t.Errorf("Debug() should not log message at level %v", tt.level)
 			}
@@ -98,18 +98,18 @@ func TestLogger_Info(t *testing.T) {
 			shouldLog: false,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
 			logger := NewLoggerWithWriter(&buf, tt.level)
-			
+
 			logger.Info("test message")
-			
+
 			if tt.shouldLog && !strings.Contains(buf.String(), "test message") {
 				t.Errorf("Info() should log message at level %v", tt.level)
 			}
-			
+
 			if !tt.shouldLog && buf.String() != "" {
 				t.Errorf("Info() should not log message at level %v", tt.level)
 			}
@@ -139,18 +139,18 @@ func TestLogger_Warning(t *testing.T) {
 			shouldLog: false,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
 			logger := NewLoggerWithWriter(&buf, tt.level)
-			
+
 			logger.Warning("test message")
-			
+
 			if tt.shouldLog && !strings.Contains(buf.String(), "test message") {
 				t.Errorf("Warning() should log message at level %v", tt.level)
 			}
-			
+
 			if !tt.shouldLog && buf.String() != "" {
 				t.Errorf("Warning() should not log message at level %v", tt.level)
 			}
@@ -180,18 +180,18 @@ func TestLogger_Error(t *testing.T) {
 			shouldLog: false,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
 			logger := NewLoggerWithWriter(&buf, tt.level)
-			
+
 			logger.Error("test message")
-			
+
 			if tt.shouldLog && !strings.Contains(buf.String(), "test message") {
 				t.Errorf("Error() should log message at level %v", tt.level)
 			}
-			
+
 			if !tt.shouldLog && buf.String() != "" {
 				t.Errorf("Error() should not log message at level %v", tt.level)
 			}
@@ -253,7 +253,7 @@ func TestLogLevelFromString(t *testing.T) {
 			want:  LogLevelInfo, // Default
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := LogLevelFromString(tt.input); got != tt.want {
@@ -267,7 +267,7 @@ func TestDefaultLogger(t *testing.T) {
 	if DefaultLogger == nil {
 		t.Error("DefaultLogger is nil")
 	}
-	
+
 	if DefaultLogger.level != LogLevelInfo {
 		t.Errorf("DefaultLogger level = %v, want %v", DefaultLogger.level, LogLevelInfo)
 	}

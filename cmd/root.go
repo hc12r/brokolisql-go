@@ -10,6 +10,7 @@ import (
 	"brokolisql-go/pkg/loaders"
 	"brokolisql-go/pkg/services"
 	"brokolisql-go/pkg/transformers"
+	"brokolisql-go/pkg/utils"
 )
 
 var (
@@ -66,9 +67,10 @@ func init() {
 	flags.StringVarP(&transformFile, "r", "r", "", "JSON file with transformation rules (shorthand)")
 	flags.BoolVarP(&normalizeColumns, "n", "n", true, "Normalize column names for SQL compatibility (shorthand)")
 
-	rootCmd.MarkFlagRequired("input")
-	rootCmd.MarkFlagRequired("output")
-	rootCmd.MarkFlagRequired("table")
+	utils.CheckError(rootCmd.MarkFlagRequired("input"))
+	utils.CheckError(rootCmd.MarkFlagRequired("output"))
+	utils.CheckError(rootCmd.MarkFlagRequired("table"))
+
 }
 
 func runConversion() error {
