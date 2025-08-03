@@ -1,7 +1,7 @@
 package processing
 
 import (
-	"brokolisql-go/pkg/loaders"
+	"brokolisql-go/pkg/common"
 	"strings"
 	"testing"
 )
@@ -104,9 +104,9 @@ func TestNewSQLGenerator(t *testing.T) {
 
 func TestSQLGenerator_Generate(t *testing.T) {
 	// Create a test dataset
-	dataset := &loaders.DataSet{
+	dataset := &common.DataSet{
 		Columns: []string{"id", "name", "age", "is_active"},
-		Rows: []loaders.DataRow{
+		Rows: []common.DataRow{
 			{"id": 1, "name": "John Doe", "age": 30, "is_active": true},
 			{"id": 2, "name": "Jane Smith", "age": 25, "is_active": false},
 		},
@@ -254,9 +254,9 @@ func TestSQLGenerator_Generate(t *testing.T) {
 
 func TestSQLGenerator_Generate_EmptyDataset(t *testing.T) {
 	// Create an empty dataset
-	dataset := &loaders.DataSet{
+	dataset := &common.DataSet{
 		Columns: []string{"id", "name", "age"},
-		Rows:    []loaders.DataRow{},
+		Rows:    []common.DataRow{},
 	}
 
 	options := SQLGeneratorOptions{
@@ -291,9 +291,9 @@ func TestSQLGenerator_Generate_EmptyDataset(t *testing.T) {
 
 func TestSQLGenerator_Generate_DifferentDialects(t *testing.T) {
 	// Create a test dataset
-	dataset := &loaders.DataSet{
+	dataset := &common.DataSet{
 		Columns: []string{"id", "name"},
-		Rows: []loaders.DataRow{
+		Rows: []common.DataRow{
 			{"id": 1, "name": "John"},
 		},
 	}

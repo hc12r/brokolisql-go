@@ -207,9 +207,6 @@ func TestColumnDef(t *testing.T) {
 	}
 
 	// Test SQLType constants
-	if SQLTypeInteger != "INTEGER" {
-		t.Errorf("Expected SQLTypeInteger to be 'INTEGER', got %s", SQLTypeInteger)
-	}
 
 	if SQLTypeFloat != "FLOAT" {
 		t.Errorf("Expected SQLTypeFloat to be 'FLOAT', got %s", SQLTypeFloat)

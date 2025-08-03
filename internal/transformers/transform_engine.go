@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"brokolisql-go/pkg/loaders"
+	"brokolisql-go/pkg/common"
 )
 
 type TransformConfig struct {
@@ -49,7 +49,7 @@ func NewTransformEngine(configFile string) (*TransformEngine, error) {
 	}, nil
 }
 
-func (e *TransformEngine) ApplyTransformations(dataset *loaders.DataSet) error {
+func (e *TransformEngine) ApplyTransformations(dataset *common.DataSet) error {
 	for _, transform := range e.config.Transformations {
 		if err := e.applyTransformation(transform, dataset); err != nil {
 			return err
@@ -58,7 +58,7 @@ func (e *TransformEngine) ApplyTransformations(dataset *loaders.DataSet) error {
 	return nil
 }
 
-func (e *TransformEngine) applyTransformation(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) applyTransformation(transform Transformation, dataset *common.DataSet) error {
 	switch transform.Type {
 	case "rename_columns":
 		return e.renameColumns(transform, dataset)
@@ -79,7 +79,7 @@ func (e *TransformEngine) applyTransformation(transform Transformation, dataset 
 	}
 }
 
-func (e *TransformEngine) renameColumns(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) renameColumns(transform Transformation, dataset *common.DataSet) error {
 	if transform.Mapping == nil {
 		return fmt.Errorf("rename_columns transformation requires a mapping")
 	}
@@ -106,7 +106,7 @@ func (e *TransformEngine) renameColumns(transform Transformation, dataset *loade
 	return nil
 }
 
-func (e *TransformEngine) addColumn(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) addColumn(transform Transformation, dataset *common.DataSet) error {
 	if transform.Name == "" {
 		return fmt.Errorf("add_column transformation requires a name")
 	}
@@ -147,7 +147,7 @@ func (e *TransformEngine) addColumn(transform Transformation, dataset *loaders.D
 	return nil
 }
 
-func (e *TransformEngine) filterRows(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) filterRows(transform Transformation, dataset *common.DataSet) error {
 	if transform.Condition == "" {
 		return fmt.Errorf("filter_rows transformation requires a condition")
 	}
@@ -172,7 +172,7 @@ func (e *TransformEngine) filterRows(transform Transformation, dataset *loaders.
 		}
 	}
 
-	var filteredRows []loaders.DataRow
+	var filteredRows []common.DataRow
 	for _, row := range dataset.Rows {
 
 		if strings.Contains(transform.Condition, " in ") {
@@ -202,7 +202,7 @@ func (e *TransformEngine) filterRows(transform Transformation, dataset *loaders.
 	return nil
 }
 
-func (e *TransformEngine) applyFunction(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) applyFunction(transform Transformation, dataset *common.DataSet) error {
 	if transform.Column == "" {
 		return fmt.Errorf("apply_function transformation requires a column")
 	}
@@ -234,7 +234,7 @@ func (e *TransformEngine) applyFunction(transform Transformation, dataset *loade
 	return nil
 }
 
-func (e *TransformEngine) replaceValues(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) replaceValues(transform Transformation, dataset *common.DataSet) error {
 	if transform.Column == "" {
 		return fmt.Errorf("replace_values transformation requires a column")
 	}
@@ -254,7 +254,7 @@ func (e *TransformEngine) replaceValues(transform Transformation, dataset *loade
 	return nil
 }
 
-func (e *TransformEngine) dropColumns(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) dropColumns(transform Transformation, dataset *common.DataSet) error {
 	if len(transform.Columns) == 0 {
 		return fmt.Errorf("drop_columns transformation requires columns")
 	}
@@ -281,7 +281,7 @@ func (e *TransformEngine) dropColumns(transform Transformation, dataset *loaders
 	return nil
 }
 
-func (e *TransformEngine) sortRows(transform Transformation, dataset *loaders.DataSet) error {
+func (e *TransformEngine) sortRows(transform Transformation, dataset *common.DataSet) error {
 	if len(transform.Columns) == 0 {
 		return fmt.Errorf("sort transformation requires columns")
 	}
