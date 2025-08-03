@@ -7,23 +7,12 @@ import (
 type ErrorType string
 
 const (
-	// ErrorTypeInput represents an input-related error
-	ErrorTypeInput ErrorType = "INPUT_ERROR"
-
-	// ErrorTypeFormat represents a format-related error
-	ErrorTypeFormat ErrorType = "FORMAT_ERROR"
-
-	// ErrorTypeTransform represents a transformation-related error
+	ErrorTypeInput     ErrorType = "INPUT_ERROR"
+	ErrorTypeFormat    ErrorType = "FORMAT_ERROR"
 	ErrorTypeTransform ErrorType = "TRANSFORM_ERROR"
-
-	// ErrorTypeSQL represents an SQL generation error
-	ErrorTypeSQL ErrorType = "SQL_ERROR"
-
-	// ErrorTypeOutput represents an output-related error
-	ErrorTypeOutput ErrorType = "OUTPUT_ERROR"
-
-	// ErrorTypeInternal represents an internal error
-	ErrorTypeInternal ErrorType = "INTERNAL_ERROR"
+	ErrorTypeSQL       ErrorType = "SQL_ERROR"
+	ErrorTypeOutput    ErrorType = "OUTPUT_ERROR"
+	ErrorTypeInternal  ErrorType = "INTERNAL_ERROR"
 )
 
 type AppError struct {
