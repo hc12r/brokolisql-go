@@ -1,12 +1,12 @@
-package services
+package processing
 
 import (
+	"brokolisql-go/internal/dialects"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	"brokolisql-go/pkg/dialects"
 	"brokolisql-go/pkg/loaders"
 )
 
@@ -135,19 +135,20 @@ func (e *TypeInferenceEngine) inferType(values []interface{}) dialects.SQLType {
 		return dialects.SQLTypeText
 	}
 
-	if boolPercent >= e.TypeThreshold {
+	switch {
+	case boolPercent >= e.TypeThreshold:
 		return dialects.SQLTypeBoolean
-	} else if intPercent >= e.TypeThreshold {
+	case intPercent >= e.TypeThreshold:
 		return dialects.SQLTypeInteger
-	} else if (intPercent + floatPercent) >= e.TypeThreshold {
+	case (intPercent + floatPercent) >= e.TypeThreshold:
 		return dialects.SQLTypeFloat
-	} else if dateTimePercent >= e.TypeThreshold {
+	case dateTimePercent >= e.TypeThreshold:
 		return dialects.SQLTypeDateTime
-	} else if datePercent >= e.TypeThreshold {
+	case datePercent >= e.TypeThreshold:
 		return dialects.SQLTypeDate
+	default:
+		return dialects.SQLTypeText
 	}
-
-	return dialects.SQLTypeText
 }
 
 func (e *TypeInferenceEngine) isInteger(s string) bool {

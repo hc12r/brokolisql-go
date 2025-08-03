@@ -1,6 +1,7 @@
-package utils
+package common
 
 import (
+	"brokolisql-go/pkg/errors"
 	"fmt"
 	"io"
 	"log"
@@ -52,31 +53,31 @@ func (l *Logger) SetLevel(level LogLevel) {
 
 func (l *Logger) Debug(format string, v ...interface{}) {
 	if l.level <= LogLevelDebug {
-		CheckError(l.debugLogger.Output(2, fmt.Sprintf(format, v...)))
+		errors.CheckError(l.debugLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Info(format string, v ...interface{}) {
 	if l.level <= LogLevelInfo {
-		CheckError(l.infoLogger.Output(2, fmt.Sprintf(format, v...)))
+		errors.CheckError(l.infoLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Warning(format string, v ...interface{}) {
 	if l.level <= LogLevelWarning {
-		CheckError(l.warningLogger.Output(2, fmt.Sprintf(format, v...)))
+		errors.CheckError(l.warningLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Error(format string, v ...interface{}) {
 	if l.level <= LogLevelError {
-		CheckError(l.errorLogger.Output(2, fmt.Sprintf(format, v...)))
+		errors.CheckError(l.errorLogger.Output(2, fmt.Sprintf(format, v...)))
 	}
 }
 
 func (l *Logger) Fatal(format string, v ...interface{}) {
 	if l.level <= LogLevelFatal {
-		CheckError(l.fatalLogger.Output(2, fmt.Sprintf(format, v...)))
+		errors.CheckError(l.fatalLogger.Output(2, fmt.Sprintf(format, v...)))
 		os.Exit(1)
 	}
 }
