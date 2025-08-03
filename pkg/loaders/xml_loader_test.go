@@ -1,6 +1,7 @@
 package loaders
 
 import (
+	"brokolisql-go/pkg/common"
 	"os"
 	"path/filepath"
 	"testing"
@@ -98,13 +99,13 @@ func TestXMLLoader_Load(t *testing.T) {
 		name     string
 		filePath string
 		wantErr  bool
-		checkFn  func(*testing.T, *DataSet)
+		checkFn  func(*testing.T, *common.DataSet)
 	}{
 		{
 			name:     "Repeating elements",
 			filePath: repeatingXMLPath,
 			wantErr:  false,
-			checkFn: func(t *testing.T, ds *DataSet) {
+			checkFn: func(t *testing.T, ds *common.DataSet) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
@@ -141,7 +142,7 @@ func TestXMLLoader_Load(t *testing.T) {
 			name:     "Attributes",
 			filePath: attributesXMLPath,
 			wantErr:  false,
-			checkFn: func(t *testing.T, ds *DataSet) {
+			checkFn: func(t *testing.T, ds *common.DataSet) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
@@ -159,7 +160,7 @@ func TestXMLLoader_Load(t *testing.T) {
 			name:     "Mixed content",
 			filePath: mixedXMLPath,
 			wantErr:  false,
-			checkFn: func(t *testing.T, ds *DataSet) {
+			checkFn: func(t *testing.T, ds *common.DataSet) {
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))
 				}
@@ -177,7 +178,7 @@ func TestXMLLoader_Load(t *testing.T) {
 			name:     "Nested repeating elements",
 			filePath: nestedXMLPath,
 			wantErr:  false,
-			checkFn: func(t *testing.T, ds *DataSet) {
+			checkFn: func(t *testing.T, ds *common.DataSet) {
 				// The loader should find the repeating employee elements
 				if len(ds.Rows) != 2 {
 					t.Errorf("Expected 2 rows, got %d", len(ds.Rows))

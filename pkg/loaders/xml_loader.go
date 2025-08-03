@@ -1,6 +1,7 @@
 package loaders
 
 import (
+	"brokolisql-go/pkg/common"
 	"encoding/xml"
 	"fmt"
 	"os"
@@ -16,7 +17,8 @@ type XMLNode struct {
 	Children []XMLNode  `xml:",any"`
 }
 
-func (l *XMLLoader) Load(filePath string) (*DataSet, error) {
+func (l *XMLLoader) Load(filePath string) (*common.DataSet, error) {
+
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open XML file: %w", err)
@@ -53,9 +55,9 @@ func (l *XMLLoader) Load(filePath string) (*DataSet, error) {
 		columns = append(columns, col)
 	}
 
-	rows := make([]DataRow, 0, len(rowElements))
+	rows := make([]common.DataRow, 0, len(rowElements))
 	for _, elem := range rowElements {
-		row := make(DataRow)
+		row := make(common.DataRow)
 
 		for _, attr := range elem.Attrs {
 			row[attr.Name.Local] = attr.Value
@@ -70,7 +72,7 @@ func (l *XMLLoader) Load(filePath string) (*DataSet, error) {
 		rows = append(rows, row)
 	}
 
-	return &DataSet{
+	return &common.DataSet{
 		Columns: columns,
 		Rows:    rows,
 	}, nil

@@ -1,6 +1,7 @@
 package loaders
 
 import (
+	"brokolisql-go/pkg/common"
 	"os"
 	"path/filepath"
 	"testing"
@@ -59,13 +60,13 @@ func TestJSONLoader_Load(t *testing.T) {
 		name     string
 		filePath string
 		wantErr  bool
-		checkFn  func(*testing.T, *DataSet)
+		checkFn  func(*testing.T, *common.DataSet)
 	}{
 		{
 			name:     "Array of objects",
 			filePath: arrayJSONPath,
 			wantErr:  false,
-			checkFn: func(t *testing.T, ds *DataSet) {
+			checkFn: func(t *testing.T, ds *common.DataSet) {
 				if len(ds.Columns) != 3 {
 					t.Errorf("Expected 3 columns, got %d", len(ds.Columns))
 				}
@@ -97,7 +98,7 @@ func TestJSONLoader_Load(t *testing.T) {
 			name:     "Single object",
 			filePath: singleJSONPath,
 			wantErr:  false,
-			checkFn: func(t *testing.T, ds *DataSet) {
+			checkFn: func(t *testing.T, ds *common.DataSet) {
 				if len(ds.Columns) != 3 {
 					t.Errorf("Expected 3 columns, got %d", len(ds.Columns))
 				}
@@ -110,7 +111,7 @@ func TestJSONLoader_Load(t *testing.T) {
 			name:     "Nested objects",
 			filePath: nestedJSONPath,
 			wantErr:  false,
-			checkFn: func(t *testing.T, ds *DataSet) {
+			checkFn: func(t *testing.T, ds *common.DataSet) {
 				if len(ds.Columns) != 3 {
 					t.Errorf("Expected 3 columns, got %d", len(ds.Columns))
 				}
