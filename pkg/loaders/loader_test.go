@@ -1,6 +1,7 @@
 package loaders
 
 import (
+	"brokolisql-go/pkg/common"
 	"testing"
 )
 
@@ -91,9 +92,9 @@ func TestGetLoader(t *testing.T) {
 
 func TestDataSet(t *testing.T) {
 	// Test creating and manipulating a DataSet
-	ds := &DataSet{
+	ds := &common.DataSet{
 		Columns: []string{"name", "age", "city"},
-		Rows: []DataRow{
+		Rows: []common.DataRow{
 			{"name": "John Doe", "age": "30", "city": "New York"},
 			{"name": "Jane Smith", "age": "25", "city": "London"},
 		},
@@ -124,7 +125,7 @@ func TestDataSet(t *testing.T) {
 	}
 
 	// Test adding a new row
-	ds.Rows = append(ds.Rows, DataRow{"name": "Bob Johnson", "age": "40", "city": "Chicago"})
+	ds.Rows = append(ds.Rows, common.DataRow{"name": "Bob Johnson", "age": "40", "city": "Chicago"})
 	if len(ds.Rows) != 3 {
 		t.Errorf("Expected 3 rows after adding a row, got %d", len(ds.Rows))
 	}

@@ -1,7 +1,7 @@
 package transformers
 
 import (
-	"brokolisql-go/pkg/loaders"
+	"brokolisql-go/pkg/common"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -29,10 +29,10 @@ func createTestTransformConfig(t *testing.T, config string) string {
 	return configPath
 }
 
-func createTestDataset() *loaders.DataSet {
-	return &loaders.DataSet{
+func createTestDataset() *common.DataSet {
+	return &common.DataSet{
 		Columns: []string{"id", "first_name", "last_name", "email", "country", "city"},
-		Rows: []loaders.DataRow{
+		Rows: []common.DataRow{
 			{
 				"id":         1,
 				"first_name": "John",

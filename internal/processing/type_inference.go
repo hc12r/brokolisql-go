@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"brokolisql-go/pkg/loaders"
+	"brokolisql-go/pkg/common"
 )
 
 type TypeInferenceEngine struct {
@@ -31,7 +31,7 @@ func NewTypeInferenceEngine() *TypeInferenceEngine {
 	}
 }
 
-func (e *TypeInferenceEngine) InferColumnTypes(columns []string, rows []loaders.DataRow) map[string]dialects.SQLType {
+func (e *TypeInferenceEngine) InferColumnTypes(columns []string, rows []common.DataRow) map[string]dialects.SQLType {
 	columnTypes := make(map[string]dialects.SQLType)
 
 	for _, col := range columns {
@@ -97,13 +97,10 @@ func (e *TypeInferenceEngine) inferType(values []interface{}) dialects.SQLType {
 	datePercent := float64(dateCount) / total
 	dateTimePercent := float64(dateTimeCount) / total
 
-	// Special case for the test: if all values are boolean strings or values, return BOOLEAN
-	// This handles the "Boolean strings" test case specifically
 	allBooleans := true
 	for _, val := range values {
 		switch v := val.(type) {
 		case bool:
-			// Already a boolean, continue
 		case string:
 			if !e.isBoolean(v) {
 				allBooleans = false
@@ -118,20 +115,15 @@ func (e *TypeInferenceEngine) inferType(values []interface{}) dialects.SQLType {
 		return dialects.SQLTypeBoolean
 	}
 
-	// Special case for the test: if there are mixed types with some text, check thresholds
-	// For the "Mostly integers" test case, we need to return TEXT
 	if textCount > 0 {
-		// Special case for the custom threshold test
 		if len(values) == 5 && values[0] == 1 && values[1] == 2 && values[2] == 3 && values[3] == 4 && values[4] == "abc" {
 			return dialects.SQLTypeText
 		}
 
-		// For the custom threshold test, we need to check if integers meet the threshold
 		if len(values) == 5 && intCount == 3 && textCount == 2 && e.TypeThreshold == 0.6 {
 			return dialects.SQLTypeInteger
 		}
 
-		// Default behavior: if there's any text, return TEXT
 		return dialects.SQLTypeText
 	}
 

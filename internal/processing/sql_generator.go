@@ -2,7 +2,7 @@ package processing
 
 import (
 	"brokolisql-go/internal/dialects"
-	"brokolisql-go/pkg/loaders"
+	"brokolisql-go/pkg/common"
 )
 
 type SQLGeneratorOptions struct {
@@ -43,7 +43,7 @@ func NewSQLGenerator(options SQLGeneratorOptions) (*SQLGenerator, error) {
 	}, nil
 }
 
-func (g *SQLGenerator) Generate(dataset *loaders.DataSet) (string, error) {
+func (g *SQLGenerator) Generate(dataset *common.DataSet) (string, error) {
 
 	columns := dataset.Columns
 	if g.options.NormalizeColumns {
@@ -51,9 +51,9 @@ func (g *SQLGenerator) Generate(dataset *loaders.DataSet) (string, error) {
 	}
 
 	if g.options.NormalizeColumns {
-		normalizedRows := make([]loaders.DataRow, len(dataset.Rows))
+		normalizedRows := make([]common.DataRow, len(dataset.Rows))
 		for i, row := range dataset.Rows {
-			normalizedRow := make(loaders.DataRow)
+			normalizedRow := make(common.DataRow)
 			for j, col := range dataset.Columns {
 				normalizedCol := columns[j]
 				normalizedRow[normalizedCol] = row[col]

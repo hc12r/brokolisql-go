@@ -1,6 +1,7 @@
 package loaders
 
 import (
+	"brokolisql-go/pkg/common"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -39,15 +40,15 @@ func TestCSVLoader_Load(t *testing.T) {
 	tests := []struct {
 		name     string
 		filePath string
-		want     *DataSet
+		want     *common.DataSet
 		wantErr  bool
 	}{
 		{
 			name:     "Valid CSV file",
 			filePath: csvPath,
-			want: &DataSet{
+			want: &common.DataSet{
 				Columns: []string{"Name", "Age", "City"},
-				Rows: []DataRow{
+				Rows: []common.DataRow{
 					{"Name": "John Doe", "Age": "30", "City": "New York"},
 					{"Name": "Jane Smith", "Age": "25", "City": "London"},
 				},
@@ -57,18 +58,18 @@ func TestCSVLoader_Load(t *testing.T) {
 		{
 			name:     "Empty CSV file",
 			filePath: emptyCSVPath,
-			want: &DataSet{
+			want: &common.DataSet{
 				Columns: []string{"Name", "Age", "City"},
-				Rows:    []DataRow{},
+				Rows:    []common.DataRow{},
 			},
 			wantErr: false,
 		},
 		{
 			name:     "CSV file with missing values",
 			filePath: missingCSVPath,
-			want: &DataSet{
+			want: &common.DataSet{
 				Columns: []string{"Name", "Age", "City"},
-				Rows: []DataRow{
+				Rows: []common.DataRow{
 					{"Name": "John Doe", "Age": "30", "City": ""},
 					{"Name": "", "Age": "25", "City": "London"},
 				},

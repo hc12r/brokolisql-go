@@ -2,7 +2,7 @@ package processing
 
 import (
 	"brokolisql-go/internal/dialects"
-	"brokolisql-go/pkg/loaders"
+	"brokolisql-go/pkg/common"
 	"reflect"
 	"testing"
 )
@@ -232,7 +232,7 @@ func TestTypeInferenceEngine_InferColumnTypes(t *testing.T) {
 
 	// Create a test dataset
 	columns := []string{"id", "name", "age", "price", "is_active", "created_at", "updated_at", "notes"}
-	rows := []loaders.DataRow{
+	rows := []common.DataRow{
 		{
 			"id":         1,
 			"name":       "Product 1",

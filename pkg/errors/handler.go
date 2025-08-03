@@ -14,3 +14,9 @@ func CheckError(err error) {
 		logFatalf("error: %v", err)
 	}
 }
+
+func CheckErrorMultiple(args ...interface{}) {
+	if len(args) > 1 && args[1] != nil {
+		logFatalf("error: %v", args[1])
+	}
+}

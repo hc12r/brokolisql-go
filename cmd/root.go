@@ -3,14 +3,15 @@ package cmd
 import (
 	"brokolisql-go/internal/processing"
 	"brokolisql-go/internal/transformers"
+	"brokolisql-go/pkg/common"
 	"brokolisql-go/pkg/errors"
+	"brokolisql-go/pkg/fetchers"
+	"brokolisql-go/pkg/loaders"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-
-	"brokolisql-go/pkg/loaders"
 )
 
 var (
@@ -23,6 +24,9 @@ var (
 	createTable      bool
 	transformFile    string
 	normalizeColumns bool
+	fetchMode        bool
+	fetchSource      string
+	fetchType        string
 )
 
 var rootCmd = &cobra.Command{
@@ -47,7 +51,7 @@ func Execute() {
 
 func init() {
 	flags := rootCmd.PersistentFlags()
-	flags.StringVar(&inputFile, "input", "", "Input file path (required)")
+	flags.StringVar(&inputFile, "input", "", "Input file path (required unless using fetch mode)")
 	flags.StringVar(&outputFile, "output", "", "Output SQL file path (required)")
 	flags.StringVar(&tableName, "table", "", "Table name for SQL statements (required)")
 	flags.StringVar(&format, "format", "", "Input file format (csv, json, xml, xlsx) - if not specified, will be inferred from file extension")
@@ -56,6 +60,11 @@ func init() {
 	flags.BoolVar(&createTable, "create-table", false, "Generate CREATE TABLE statement")
 	flags.StringVar(&transformFile, "transform", "", "JSON file with transformation rules")
 	flags.BoolVar(&normalizeColumns, "normalize", true, "Normalize column names for SQL compatibility")
+
+	// Fetch mode flags
+	flags.BoolVar(&fetchMode, "fetch", false, "Enable fetch mode to retrieve data from remote sources")
+	flags.StringVar(&fetchSource, "source", "", "Source URL or connection string for fetch mode")
+	flags.StringVar(&fetchType, "source-type", "rest", "Source type for fetch mode (rest, etc.)")
 
 	flags.StringVarP(&inputFile, "i", "i", "", "Input file path (shorthand)")
 	flags.StringVarP(&outputFile, "o", "o", "", "Output SQL file path (shorthand)")
@@ -67,38 +76,77 @@ func init() {
 	flags.StringVarP(&transformFile, "r", "r", "", "JSON file with transformation rules (shorthand)")
 	flags.BoolVarP(&normalizeColumns, "n", "n", true, "Normalize column names for SQL compatibility (shorthand)")
 
-	errors.CheckError(rootCmd.MarkFlagRequired("input"))
+	// Only mark input as required if not in fetch mode
 	errors.CheckError(rootCmd.MarkFlagRequired("output"))
 	errors.CheckError(rootCmd.MarkFlagRequired("table"))
 
 }
 
 func runConversion() error {
+	var dataset *common.DataSet
+	var err error
 
-	if format == "" {
-		ext := filepath.Ext(inputFile)
-		switch ext {
-		case ".csv":
-			format = "csv"
-		case ".json":
-			format = "json"
-		case ".xml":
-			format = "xml"
-		case ".xlsx", ".xls":
-			format = "excel"
-		default:
-			return fmt.Errorf("could not determine file format from extension: %s, please specify with --format", ext)
+	// Check if we're in fetch mode or file mode
+	if fetchMode {
+		// Validate fetch mode parameters
+		if fetchSource == "" {
+			return fmt.Errorf("source URL or connection string is required when using fetch mode")
 		}
-	}
 
-	loader, err := loaders.GetLoader(inputFile)
-	if err != nil {
-		return fmt.Errorf("failed to get loader: %w", err)
-	}
+		// Get the appropriate fetcher
+		fetcher, err := fetchers.GetFetcher(fetchType)
+		if err != nil {
+			return fmt.Errorf("failed to get fetcher: %w", err)
+		}
 
-	dataset, err := loader.Load(inputFile)
-	if err != nil {
-		return fmt.Errorf("failed to load data: %w", err)
+		// Create options map for the fetcher
+		options := make(map[string]interface{})
+		// Add default options for REST fetcher
+		if fetchType == "rest" {
+			options["method"] = "GET"
+			options["headers"] = map[string]string{
+				"Accept": "application/json",
+			}
+		}
+
+		// Fetch the data
+		fmt.Printf("Fetching data from %s using %s fetcher...\n", fetchSource, fetchType)
+		dataset, err = fetcher.Fetch(fetchSource, options)
+		if err != nil {
+			return fmt.Errorf("failed to fetch data: %w", err)
+		}
+		fmt.Printf("Successfully fetched %d rows of data\n", len(dataset.Rows))
+	} else {
+		// Traditional file loading mode
+		if inputFile == "" {
+			return fmt.Errorf("input file is required when not using fetch mode")
+		}
+
+		if format == "" {
+			ext := filepath.Ext(inputFile)
+			switch ext {
+			case ".csv":
+				format = "csv"
+			case ".json":
+				format = "json"
+			case ".xml":
+				format = "xml"
+			case ".xlsx", ".xls":
+				format = "excel"
+			default:
+				return fmt.Errorf("could not determine file format from extension: %s, please specify with --format", ext)
+			}
+		}
+
+		loader, err := loaders.GetLoader(inputFile)
+		if err != nil {
+			return fmt.Errorf("failed to get loader: %w", err)
+		}
+
+		dataset, err = loader.Load(inputFile)
+		if err != nil {
+			return fmt.Errorf("failed to load data: %w", err)
+		}
 	}
 
 	if transformFile != "" {

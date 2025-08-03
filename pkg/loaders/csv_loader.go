@@ -1,6 +1,7 @@
 package loaders
 
 import (
+	"brokolisql-go/pkg/common"
 	"encoding/csv"
 	"fmt"
 	"os"
@@ -9,12 +10,17 @@ import (
 
 type CSVLoader struct{}
 
-func (l *CSVLoader) Load(filePath string) (*DataSet, error) {
+func (l *CSVLoader) Load(filePath string) (*common.DataSet, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open CSV file: %w", err)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Printf("failed to close CSV file: %v\n", err)
+		}
+	}(file)
 
 	reader := csv.NewReader(file)
 
@@ -32,9 +38,9 @@ func (l *CSVLoader) Load(filePath string) (*DataSet, error) {
 		return nil, fmt.Errorf("failed to read CSV data: %w", err)
 	}
 
-	rows := make([]DataRow, 0, len(records))
+	rows := make([]common.DataRow, 0, len(records))
 	for _, record := range records {
-		row := make(DataRow)
+		row := make(common.DataRow)
 		for i, value := range record {
 			if i < len(headers) {
 				row[headers[i]] = value
@@ -43,7 +49,7 @@ func (l *CSVLoader) Load(filePath string) (*DataSet, error) {
 		rows = append(rows, row)
 	}
 
-	return &DataSet{
+	return &common.DataSet{
 		Columns: headers,
 		Rows:    rows,
 	}, nil

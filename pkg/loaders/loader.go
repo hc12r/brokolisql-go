@@ -1,19 +1,13 @@
 package loaders
 
 import (
+	"brokolisql-go/pkg/common"
 	"errors"
 	"path/filepath"
 )
 
-type DataRow map[string]interface{}
-
-type DataSet struct {
-	Columns []string
-	Rows    []DataRow
-}
-
 type Loader interface {
-	Load(filePath string) (*DataSet, error)
+	Load(filePath string) (*common.DataSet, error)
 }
 
 func GetLoader(filePath string) (Loader, error) {

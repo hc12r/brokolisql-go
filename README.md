@@ -7,6 +7,7 @@ BrokoliSQL-Go is a powerful command-line tool written in Go that converts struct
 ## Features
 
 - **Multi-format Support**: Process CSV, Excel (XLSX), JSON, and XML files
+- **Remote Data Fetching**: Retrieve data directly from REST APIs and other remote sources
 - **SQL Dialect Support**: Generate SQL for PostgreSQL, MySQL, SQLite, SQL Server, Oracle, and more
 - **Automatic Table Creation**: Optionally generate CREATE TABLE statements based on input data
 - **Smart Type Inference**: Automatically detect appropriate SQL data types
@@ -52,14 +53,17 @@ Flags:
   -b, --batch-size int       Number of rows per INSERT statement (default 100)
   -c, --create-table         Generate CREATE TABLE statement
   -d, --dialect string       SQL dialect (generic, postgres, mysql, sqlite, sqlserver, oracle) (default "generic")
+      --fetch                Enable fetch mode to retrieve data from remote sources
   -f, --format string        Input file format (csv, json, xml, xlsx) - if not specified, will be inferred from file extension
   -h, --help                 help for brokolisql
-  -i, --input string         Input file path (required)
+  -i, --input string         Input file path (required unless using fetch mode)
+      --log-level string     Log level (debug, info, warning, error, fatal) (default "info")
   -n, --normalize            Normalize column names for SQL compatibility (default true)
   -o, --output string        Output SQL file path (required)
+      --source string        Source URL or connection string for fetch mode
+      --source-type string   Source type for fetch mode (rest, etc.) (default "rest")
   -r, --transform string     JSON file with transformation rules
   -t, --table string         Table name for SQL statements (required)
-      --log-level string     Log level (debug, info, warning, error, fatal) (default "info")
 ```
 
 ### Examples
@@ -87,6 +91,46 @@ Apply transformations:
 ```bash
 brokolisql --input data.csv --output output.sql --table users --transform transforms.json
 ```
+
+Fetch data from a REST API:
+
+```bash
+brokolisql --fetch --source https://api.example.com/data --output output.sql --table users
+```
+
+Fetch data and apply transformations:
+
+```bash
+brokolisql --fetch --source https://api.example.com/data --output output.sql --table users --transform transforms.json
+```
+
+## Remote Data Fetching
+
+BrokoliSQL-Go can fetch data directly from remote sources, eliminating the need to download files locally before processing. Currently, it supports:
+
+- **REST APIs**: Fetch JSON data from HTTP endpoints
+
+### Using Fetch Mode
+
+To use fetch mode, use the `--fetch` flag along with the following options:
+
+- `--source`: The URL or connection string for the data source
+- `--source-type`: The type of source (currently supports "rest")
+
+Example:
+
+```bash
+brokolisql --fetch --source https://api.example.com/users --source-type rest --output users.sql --table users
+```
+
+### REST API Options
+
+When fetching from REST APIs, the following default settings are applied:
+
+- HTTP Method: GET
+- Accept Header: application/json
+
+The fetched JSON data is automatically parsed and converted to the same internal format used by the file loaders, allowing you to apply transformations and generate SQL just like with local files.
 
 ## Data Transformations
 
