@@ -8,6 +8,7 @@ BrokoliSQL-Go is a powerful command-line tool written in Go that converts struct
 
 - **Multi-format Support**: Process CSV, Excel (XLSX), JSON, and XML files
 - **Remote Data Fetching**: Retrieve data directly from REST APIs and other remote sources
+- **Nested JSON Support**: Automatically normalize nested JSON objects into proper relational tables
 - **SQL Dialect Support**: Generate SQL for PostgreSQL, MySQL, SQLite, SQL Server, Oracle, and more
 - **Automatic Table Creation**: Optionally generate CREATE TABLE statements based on input data
 - **Smart Type Inference**: Automatically detect appropriate SQL data types

@@ -44,7 +44,19 @@ func NewSQLGenerator(options SQLGeneratorOptions) (*SQLGenerator, error) {
 }
 
 func (g *SQLGenerator) Generate(dataset *common.DataSet) (string, error) {
+	// Check if we need to handle nested objects
+	hasNestedObjects := g.hasNestedObjects(dataset)
 
+	if hasNestedObjects {
+		// Use the nested JSON processor for nested objects
+		processor, err := NewNestedJSONProcessor(g.options)
+		if err != nil {
+			return "", err
+		}
+		return processor.ProcessDataSet(dataset)
+	}
+
+	// Original implementation for flat data
 	columns := dataset.Columns
 	if g.options.NormalizeColumns {
 		columns = g.normalizer.NormalizeColumnNames(columns)
@@ -66,7 +78,6 @@ func (g *SQLGenerator) Generate(dataset *common.DataSet) (string, error) {
 	var sql string
 
 	if g.options.CreateTable {
-
 		columnTypes := g.typeInferer.InferColumnTypes(columns, dataset.Rows)
 
 		columnDefs := make([]dialects.ColumnDef, len(columns))
@@ -94,4 +105,27 @@ func (g *SQLGenerator) Generate(dataset *common.DataSet) (string, error) {
 	sql += g.dialect.InsertInto(g.options.TableName, columns, values, g.options.BatchSize)
 
 	return sql, nil
+}
+
+// hasNestedObjects checks if the dataset contains nested objects
+func (g *SQLGenerator) hasNestedObjects(dataset *common.DataSet) bool {
+	// Check each row for nested objects
+	for _, row := range dataset.Rows {
+		for _, value := range row {
+			// Check if it's a map
+			if _, ok := value.(map[string]interface{}); ok {
+				return true
+			}
+
+			// Check if it's a JSON string that contains an object
+			if strValue, ok := value.(string); ok {
+				// If it starts with { and ends with }, it might be a JSON object
+				if len(strValue) > 1 && strValue[0] == '{' && strValue[len(strValue)-1] == '}' {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
 }
