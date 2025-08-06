@@ -229,19 +229,27 @@ For a comprehensive overview of the entire implementation, see [IMPLEMENTATION_S
 
 ```
 brokolisql-go/
+├── brokolisql
 ├── brokolisql-go.iml
 ├── cmd
 │   └── root.go
 ├── docs
+│   ├── FETCHERS.md
 │   ├── GITHUB_ACTIONS.md
 │   ├── GITHUB_ACTIONS_SUMMARY.md
-│   └── IMPLEMENTATION_SUMMARY.md
+│   ├── IMPLEMENTATION_SUMMARY.md
+│   └── NESTED_JSON.md
 ├── examples
 │   ├── customers.csv
 │   ├── output-100.sql
 │   ├── output.sql
 │   ├── output_transformed.sql
-│   └── transforms.json
+│   ├── rest_api_example.go
+│   ├── transforms.json
+│   ├── users.json
+│   └── users.sql
+├── go.mod
+├── go.sum
 ├── internal
 │   ├── dialects
 │   │   ├── dialect.go
@@ -254,8 +262,13 @@ brokolisql-go/
 │   │   ├── sqlite.go
 │   │   └── sqlserver.go
 │   ├── processing
+│   │   ├── json_analyzer.go
+│   │   ├── multi_table_generator.go
+│   │   ├── nested_json_processor.go
+│   │   ├── nested_json_processor_test.go
 │   │   ├── normalizer.go
 │   │   ├── normalizer_test.go
+│   │   ├── schema.go
 │   │   ├── sql_generator.go
 │   │   ├── sql_generator_test.go
 │   │   ├── type_inference.go
@@ -265,13 +278,19 @@ brokolisql-go/
 │       └── transform_engine_test.go
 ├── pkg
 │   ├── common
+│   │   ├── json_utils.go
 │   │   ├── logger.go
-│   │   └── logger_test.go
+│   │   ├── logger_test.go
+│   │   └── safe_reading.go
 │   ├── errors
 │   │   ├── errors.go
 │   │   ├── errors_test.go
 │   │   ├── handler.go
 │   │   └── handler_test.go
+│   ├── fetchers
+│   │   ├── fetcher.go
+│   │   ├── rest_fetcher.go
+│   │   └── rest_fetcher_test.go
 │   └── loaders
 │       ├── csv_loader.go
 │       ├── csv_loader_test.go
@@ -283,11 +302,10 @@ brokolisql-go/
 │       ├── loader_test.go
 │       ├── xml_loader.go
 │       └── xml_loader_test.go
-├── go.mod
-├── go.sum
-├── main.go
+├── README.md
 ├── LICENSE
-└── README.md
+├── main.go
+└── test_fetch.sh
 ```
 
 ## Contributing
