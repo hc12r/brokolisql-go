@@ -17,9 +17,12 @@ const (
 )
 
 type ColumnDef struct {
-	Name     string
-	Type     SQLType
-	Nullable bool
+	Name         string
+	Type         SQLType
+	Nullable     bool
+	IsPrimaryKey bool
+	IsForeignKey bool
+	References   string // Referenced table.column
 }
 
 type Dialect interface {

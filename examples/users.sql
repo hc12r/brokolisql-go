@@ -1,23 +1,88 @@
-CREATE TABLE "users" (
-  "PHONE" TEXT,
-  "WEBSITE" TEXT,
-  "ID" FLOAT,
-  "USERNAME" TEXT,
-  "ADDRESS" TEXT,
-  "COMPANY" TEXT,
-  "NAME" TEXT,
-  "EMAIL" TEXT
+CREATE TABLE "geos" (
+  "id" INTEGER PRIMARY KEY,
+  "lat" TEXT,
+  "lng" TEXT
 );
 
-INSERT INTO "users" ("PHONE", "WEBSITE", "ID", "USERNAME", "ADDRESS", "COMPANY", "NAME", "EMAIL") VALUES
-('1-770-736-8031 x56442', 'hildegard.org', 1, 'Bret', '{"city":"Gwenborough","geo":{"lat":"-37.3159","lng":"81.1496"},"street":"Kulas Light","suite":"Apt. 556","zipcode":"92998-3874"}', '{"bs":"harness real-time e-markets","catchPhrase":"Multi-layered client-server neural-net","name":"Romaguera-Crona"}', 'Leanne Graham', 'Sincere@april.biz'),
-('010-692-6593 x09125', 'anastasia.net', 2, 'Antonette', '{"city":"Wisokyburgh","geo":{"lat":"-43.9509","lng":"-34.4618"},"street":"Victor Plains","suite":"Suite 879","zipcode":"90566-7771"}', '{"bs":"synergize scalable supply-chains","catchPhrase":"Proactive didactic contingency","name":"Deckow-Crist"}', 'Ervin Howell', 'Shanna@melissa.tv'),
-('1-463-123-4447', 'ramiro.info', 3, 'Samantha', '{"city":"McKenziehaven","geo":{"lat":"-68.6102","lng":"-47.0653"},"street":"Douglas Extension","suite":"Suite 847","zipcode":"59590-4157"}', '{"bs":"e-enable strategic applications","catchPhrase":"Face to face bifurcated interface","name":"Romaguera-Jacobson"}', 'Clementine Bauch', 'Nathan@yesenia.net'),
-('493-170-9623 x156', 'kale.biz', 4, 'Karianne', '{"city":"South Elvis","geo":{"lat":"29.4572","lng":"-164.2990"},"street":"Hoeger Mall","suite":"Apt. 692","zipcode":"53919-4257"}', '{"bs":"transition cutting-edge web services","catchPhrase":"Multi-tiered zero tolerance productivity","name":"Robel-Corkery"}', 'Patricia Lebsack', 'Julianne.OConner@kory.org'),
-('(254)954-1289', 'demarco.info', 5, 'Kamren', '{"city":"Roscoeview","geo":{"lat":"-31.8129","lng":"62.5342"},"street":"Skiles Walks","suite":"Suite 351","zipcode":"33263"}', '{"bs":"revolutionize end-to-end systems","catchPhrase":"User-centric fault-tolerant solution","name":"Keebler LLC"}', 'Chelsey Dietrich', 'Lucio_Hettinger@annie.ca'),
-('1-477-935-8478 x6430', 'ola.org', 6, 'Leopoldo_Corkery', '{"city":"South Christy","geo":{"lat":"-71.4197","lng":"71.7478"},"street":"Norberto Crossing","suite":"Apt. 950","zipcode":"23505-1337"}', '{"bs":"e-enable innovative applications","catchPhrase":"Synchronised bottom-line interface","name":"Considine-Lockman"}', 'Mrs. Dennis Schulist', 'Karley_Dach@jasper.info'),
-('210.067.6132', 'elvis.io', 7, 'Elwyn.Skiles', '{"city":"Howemouth","geo":{"lat":"24.8918","lng":"21.8984"},"street":"Rex Trail","suite":"Suite 280","zipcode":"58804-1099"}', '{"bs":"generate enterprise e-tailers","catchPhrase":"Configurable multimedia task-force","name":"Johns Group"}', 'Kurtis Weissnat', 'Telly.Hoeger@billy.biz'),
-('586.493.6943 x140', 'jacynthe.com', 8, 'Maxime_Nienow', '{"city":"Aliyaview","geo":{"lat":"-14.3990","lng":"-120.7677"},"street":"Ellsworth Summit","suite":"Suite 729","zipcode":"45169"}', '{"bs":"e-enable extensible e-tailers","catchPhrase":"Implemented secondary concept","name":"Abernathy Group"}', 'Nicholas Runolfsdottir V', 'Sherwood@rosamond.me'),
-('(775)976-6794 x41206', 'conrad.com', 9, 'Delphine', '{"city":"Bartholomebury","geo":{"lat":"24.6463","lng":"-168.8889"},"street":"Dayna Park","suite":"Suite 449","zipcode":"76495-3109"}', '{"bs":"aggregate real-time technologies","catchPhrase":"Switchable contextually-based project","name":"Yost and Sons"}', 'Glenna Reichert', 'Chaim_McDermott@dana.io'),
-('024-648-3804', 'ambrose.net', 10, 'Moriah.Stanton', '{"city":"Lebsackbury","geo":{"lat":"-38.2386","lng":"57.2232"},"street":"Kattie Turnpike","suite":"Suite 198","zipcode":"31428-2261"}', '{"bs":"target end-to-end models","catchPhrase":"Centralized empowering task-force","name":"Hoeger LLC"}', 'Clementina DuBuque', 'Rey.Padberg@karina.biz');
+CREATE TABLE "addresses" (
+  "id" INTEGER PRIMARY KEY,
+  "geo_id" INTEGER,
+  "street" TEXT,
+  "suite" TEXT,
+  "zipcode" TEXT,
+  "city" TEXT,
+  FOREIGN KEY ("geo_id") REFERENCES "geos" ("id") ON DELETE CASCADE
+);
+
+CREATE TABLE "companies" (
+  "id" INTEGER PRIMARY KEY,
+  "bs" TEXT,
+  "catchPhrase" TEXT,
+  "name" TEXT
+);
+
+CREATE TABLE "userses" (
+  "id" INTEGER PRIMARY KEY,
+  "name" TEXT,
+  "username" TEXT,
+  "email" TEXT,
+  "address_id" INTEGER,
+  "phone" TEXT,
+  "website" TEXT,
+  "company_id" INTEGER,
+  FOREIGN KEY ("address_id") REFERENCES "addresses" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("company_id") REFERENCES "companies" ("id") ON DELETE CASCADE
+);
+
+INSERT INTO "geos" ("id", "lat", "lng") VALUES
+(31, '-37.3159', '81.1496'),
+(32, '-43.9509', '-34.4618'),
+(33, '-68.6102', '-47.0653'),
+(34, '29.4572', '-164.2990'),
+(35, '-31.8129', '62.5342'),
+(36, '-71.4197', '71.7478'),
+(37, '24.8918', '21.8984'),
+(38, '-14.3990', '-120.7677'),
+(39, '24.6463', '-168.8889'),
+(40, '-38.2386', '57.2232');
+
+
+INSERT INTO "addresses" ("id", "geo_id", "street", "suite", "zipcode", "city") VALUES
+(11, 31, 'Kulas Light', 'Apt. 556', '92998-3874', 'Gwenborough'),
+(12, 32, 'Victor Plains', 'Suite 879', '90566-7771', 'Wisokyburgh'),
+(13, 33, 'Douglas Extension', 'Suite 847', '59590-4157', 'McKenziehaven'),
+(14, 34, 'Hoeger Mall', 'Apt. 692', '53919-4257', 'South Elvis'),
+(15, 35, 'Skiles Walks', 'Suite 351', '33263', 'Roscoeview'),
+(16, 36, 'Norberto Crossing', 'Apt. 950', '23505-1337', 'South Christy'),
+(17, 37, 'Rex Trail', 'Suite 280', '58804-1099', 'Howemouth'),
+(18, 38, 'Ellsworth Summit', 'Suite 729', '45169', 'Aliyaview'),
+(19, 39, 'Dayna Park', 'Suite 449', '76495-3109', 'Bartholomebury'),
+(20, 40, 'Kattie Turnpike', 'Suite 198', '31428-2261', 'Lebsackbury');
+
+
+INSERT INTO "companies" ("id", "bs", "catchPhrase", "name") VALUES
+(21, 'harness real-time e-markets', 'Multi-layered client-server neural-net', 'Romaguera-Crona'),
+(22, 'synergize scalable supply-chains', 'Proactive didactic contingency', 'Deckow-Crist'),
+(23, 'e-enable strategic applications', 'Face to face bifurcated interface', 'Romaguera-Jacobson'),
+(24, 'transition cutting-edge web services', 'Multi-tiered zero tolerance productivity', 'Robel-Corkery'),
+(25, 'revolutionize end-to-end systems', 'User-centric fault-tolerant solution', 'Keebler LLC'),
+(26, 'e-enable innovative applications', 'Synchronised bottom-line interface', 'Considine-Lockman'),
+(27, 'generate enterprise e-tailers', 'Configurable multimedia task-force', 'Johns Group'),
+(28, 'e-enable extensible e-tailers', 'Implemented secondary concept', 'Abernathy Group'),
+(29, 'aggregate real-time technologies', 'Switchable contextually-based project', 'Yost and Sons'),
+(30, 'target end-to-end models', 'Centralized empowering task-force', 'Hoeger LLC');
+
+
+INSERT INTO "userses" ("id", "name", "username", "email", "address_id", "phone", "website", "company_id") VALUES
+(1, 'Leanne Graham', 'Bret', 'Sincere@april.biz', 11, '1-770-736-8031 x56442', 'hildegard.org', 21),
+(2, 'Ervin Howell', 'Antonette', 'Shanna@melissa.tv', 12, '010-692-6593 x09125', 'anastasia.net', 22),
+(3, 'Clementine Bauch', 'Samantha', 'Nathan@yesenia.net', 13, '1-463-123-4447', 'ramiro.info', 23),
+(4, 'Patricia Lebsack', 'Karianne', 'Julianne.OConner@kory.org', 14, '493-170-9623 x156', 'kale.biz', 24),
+(5, 'Chelsey Dietrich', 'Kamren', 'Lucio_Hettinger@annie.ca', 15, '(254)954-1289', 'demarco.info', 25),
+(6, 'Mrs. Dennis Schulist', 'Leopoldo_Corkery', 'Karley_Dach@jasper.info', 16, '1-477-935-8478 x6430', 'ola.org', 26),
+(7, 'Kurtis Weissnat', 'Elwyn.Skiles', 'Telly.Hoeger@billy.biz', 17, '210.067.6132', 'elvis.io', 27),
+(8, 'Nicholas Runolfsdottir V', 'Maxime_Nienow', 'Sherwood@rosamond.me', 18, '586.493.6943 x140', 'jacynthe.com', 28),
+(9, 'Glenna Reichert', 'Delphine', 'Chaim_McDermott@dana.io', 19, '(775)976-6794 x41206', 'conrad.com', 29),
+(10, 'Clementina DuBuque', 'Moriah.Stanton', 'Rey.Padberg@karina.biz', 20, '024-648-3804', 'ambrose.net', 30);
+
 
