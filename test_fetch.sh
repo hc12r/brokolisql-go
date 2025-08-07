@@ -5,7 +5,7 @@ echo "Building brokolisql..."
 go build -o brokolisql
 
 echo "Testing fetch mode with a public REST API..."
-./brokolisql --fetch --source https://jsonplaceholder.typicode.com/users --output ./examples/users.sql --table users --create-table
+./brokolisql --fetch --source https://jsonplaceholder.typicode.com/users --output ./examples/users.sql --table users --create-table --dialect sqlserver
 
 if [ $? -eq 0 ]; then
     echo "Fetch test successful!"
