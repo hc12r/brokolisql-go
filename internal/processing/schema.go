@@ -4,6 +4,8 @@ import (
 	"brokolisql-go/internal/dialects"
 	"fmt"
 	"strings"
+
+	"github.com/jinzhu/inflection"
 )
 
 // TableSchema represents the schema for a single table
@@ -283,42 +285,13 @@ func (g *NameGenerator) applyConvention(name string) string {
 
 // pluralize returns the plural form of a word (simple implementation)
 func (g *NameGenerator) pluralize(word string) string {
-	specialSuffixes := []string{"s", "x", "z", "ch", "sh"}
+	return inflection.Plural(word)
 
-	if strings.HasSuffix(word, "y") && len(word) > 1 && !isVowel(rune(word[len(word)-2])) {
-		return strings.TrimSuffix(word, "y") + "ies"
-	}
-
-	for _, suffix := range specialSuffixes {
-		if strings.HasSuffix(word, suffix) {
-			return word + "es"
-		}
-	}
-
-	return word + "s"
 }
 
 // singularize returns the singular form of a word (simple implementation)
 func (g *NameGenerator) singularize(word string) string {
-	if strings.HasSuffix(word, "ies") && len(word) > 3 {
-		return strings.TrimSuffix(word, "ies") + "y"
-	}
-
-	specialSuffixes := []string{"s", "x", "z", "ch", "sh"}
-	if strings.HasSuffix(word, "es") && len(word) > 2 {
-		base := strings.TrimSuffix(word, "es")
-		for _, suffix := range specialSuffixes {
-			if strings.HasSuffix(base, suffix) {
-				return base
-			}
-		}
-	}
-
-	if strings.HasSuffix(word, "s") && len(word) > 1 {
-		return strings.TrimSuffix(word, "s")
-	}
-
-	return word
+	return inflection.Singular(word)
 }
 
 // toCamelCase converts a string to camelCase

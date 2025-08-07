@@ -49,14 +49,14 @@ func TestNestedJSONProcessor_ProcessNestedJSON(t *testing.T) {
 	verifySQL(t, sql, []string{
 		"CREATE TABLE", "geos", "lat", "lng",
 		"CREATE TABLE", "addresses", "city", "geo_id",
-		"CREATE TABLE", "userses", "id", "name", "address_id",
+		"CREATE TABLE", "users", "id", "name", "address_id",
 		"FOREIGN KEY", "REFERENCES",
 	})
 
 	// Verify table creation order
 	// Print the SQL for debugging
 	t.Logf("Generated SQL:\n%s", sql)
-	verifyTableOrder(t, sql, []string{"geos", "addresses", "userses"})
+	verifyTableOrder(t, sql, []string{"geos", "addresses", "users"})
 }
 
 func TestNestedJSONProcessor_ProcessArrays(t *testing.T) {
@@ -100,8 +100,8 @@ func TestNestedJSONProcessor_ProcessArrays(t *testing.T) {
 	// Print the SQL for debugging
 	t.Logf("Generated SQL:\n%s", sql)
 	verifySQL(t, sql, []string{
-		"CREATE TABLE", "contactses", "type", "value", "userses_id",
-		"CREATE TABLE", "userses", "id", "name", "tags",
+		"CREATE TABLE", "contacts", "type", "value", "users_id",
+		"CREATE TABLE", "users", "id", "name", "tags",
 		"FOREIGN KEY", "REFERENCES",
 	})
 
@@ -111,8 +111,8 @@ func TestNestedJSONProcessor_ProcessArrays(t *testing.T) {
 	}
 
 	// Verify that object arrays are stored in separate tables
-	if !strings.Contains(sql, "contactses") {
-		t.Errorf("SQL should contain 'contactses' table for array of objects")
+	if !strings.Contains(sql, "contacts") {
+		t.Errorf("SQL should contain 'contacts' table for array of objects")
 	}
 }
 
@@ -165,12 +165,12 @@ func TestNestedJSONProcessor_DeepNesting(t *testing.T) {
 		"CREATE TABLE", "locations", "building", "floor",
 		"CREATE TABLE", "departments", "name", "location_id",
 		"CREATE TABLE", "companies", "name", "department_id",
-		"CREATE TABLE", "userses", "id", "name", "company_id",
+		"CREATE TABLE", "users", "id", "name", "company_id",
 		"FOREIGN KEY", "REFERENCES",
 	})
 
 	// Verify table creation order (deepest first)
-	verifyTableOrder(t, sql, []string{"locations", "departments", "companies", "userses"})
+	verifyTableOrder(t, sql, []string{"locations", "departments", "companies", "users"})
 }
 
 func TestNestedJSONProcessor_CustomNamingConvention(t *testing.T) {
@@ -220,8 +220,8 @@ func TestNestedJSONProcessor_CustomNamingConvention(t *testing.T) {
 	if !strings.Contains(sql, "app_homeAddresses") {
 		t.Errorf("SQL should contain 'app_homeAddresses' table with camelCase and prefix")
 	}
-	if !strings.Contains(sql, "app_userses") {
-		t.Errorf("SQL should contain 'app_userses' table with prefix")
+	if !strings.Contains(sql, "app_users") {
+		t.Errorf("SQL should contain 'app_users' table with prefix")
 	}
 }
 
