@@ -319,12 +319,6 @@ func toCamelCase(s string) string {
 	return strings.Join(parts, "")
 }
 
-// isVowel checks if a rune is a vowel
-func isVowel(r rune) bool {
-	vowels := "aeiouAEIOU"
-	return strings.ContainsRune(vowels, r)
-}
-
 // isCamelOrPascalCase checks if a string is already in camelCase or PascalCase
 func isCamelOrPascalCase(s string) bool {
 	// Check if the string contains any underscores or non-alphanumeric characters
